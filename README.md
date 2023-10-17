@@ -11,7 +11,7 @@ More on [homepage](https://sourceafis.machinezoo.com/net).
 
 ## Status
 
-Unstable but maintained. Some APIs are prone to changes. The WSQ encoder found **utils/encode/wsq** is a port of NBIS' WSQ decoder algorithm, encoder is yet to be done.
+Unstable but maintained. Some APIs are prone to changes. The WSQ encoder found in **utils/encode/wsq** is a port of NBIS' WSQ decoder algorithm, encoder is yet to be done.
 
 ## Getting started
 
