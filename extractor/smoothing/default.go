@@ -4,6 +4,7 @@ import (
 	"sourceafis/config"
 	"sourceafis/extractor/logger"
 	"sourceafis/primitives"
+	"sync"
 )
 
 type OrientedSmoothing struct {
@@ -32,24 +33,39 @@ func (s *OrientedSmoothing) Orthogonal(input, orientation *primitives.Matrix, ma
 
 func lines(resolution, radius int, step float64) [][]primitives.IntPoint {
 	result := make([][]primitives.IntPoint, resolution)
+	var wg sync.WaitGroup
+	var mu sync.Mutex
+
 	for orientationIndex := 0; orientationIndex < resolution; orientationIndex++ {
-		line := []primitives.IntPoint{primitives.ZeroIntPoint()}
-		direction := primitives.BucketCenter(orientationIndex, resolution).FromOrientation().ToVector()
-		for r := float64(radius); r >= 0.5; r /= step {
-			sample := direction.Multiply(r).Round()
-			var isFound bool
-			for _, samp := range line {
-				if samp.Equals(sample) {
-					isFound = true
+		wg.Add(1)
+
+		go func(orientationIndex int) {
+			defer wg.Done()
+
+			line := []primitives.IntPoint{primitives.ZeroIntPoint()}
+			direction := primitives.BucketCenter(orientationIndex, resolution).FromOrientation().ToVector()
+			for r := float64(radius); r >= 0.5; r /= step {
+				sample := direction.Multiply(r).Round()
+				var isFound bool
+				for _, samp := range line {
+					if samp.Equals(sample) {
+						isFound = true
+						break
+					}
+				}
+				if !isFound {
+					line = append(line, sample)
+					line = append(line, sample.Negate())
 				}
 			}
-			if !isFound {
-				line = append(line, sample)
-				line = append(line, sample.Negate())
-			}
-		}
-		result[orientationIndex] = line
+
+			mu.Lock()
+			result[orientationIndex] = line
+			mu.Unlock()
+		}(orientationIndex)
 	}
+
+	wg.Wait()
 	return result
 }
 

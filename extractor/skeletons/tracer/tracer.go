@@ -179,8 +179,8 @@ func traceRidges(thinned *primitives.BooleanMatrix, minutiaePoints map[primitive
 					ridge.Points.Add(current)
 				}
 				end := current
-				ridge.Start(minutiaePoints[minutiaPoint])
-				ridge.End(minutiaePoints[end])
+				ridge.SetStart(minutiaePoints[minutiaPoint])
+				ridge.SetEnd(minutiaePoints[end])
 				v, err := ridge.Points.Get(1)
 				if err != nil {
 					return err

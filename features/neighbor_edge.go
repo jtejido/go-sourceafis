@@ -1,7 +1,6 @@
 package features
 
 import (
-	"math"
 	"sort"
 	"sourceafis/config"
 )
@@ -39,11 +38,11 @@ func (b *NeighborhoodBuilder) Build(minutiae []*SearchMinutia) [][]*NeighborEdge
 	allSqDistances := make([]int, len(minutiae))
 	for reference := 0; reference < len(edges); reference++ {
 		rminutia := minutiae[reference]
-		maxSqDistance := math.MaxInt
+		maxSqDistance := int(^uint(0) >> 1)
 		if len(minutiae)-1 > config.Config.EdgeTableNeighbors {
 			for neighbor := 0; neighbor < len(minutiae); neighbor++ {
 				nminutia := minutiae[neighbor]
-				allSqDistances[neighbor] = int(math.Pow(float64(rminutia.X-nminutia.X), 2)) + int(math.Pow(float64(rminutia.Y-nminutia.Y), 2))
+				allSqDistances[neighbor] = (rminutia.X-nminutia.X)*(rminutia.X-nminutia.X) + (rminutia.Y-nminutia.Y)*(rminutia.Y-nminutia.Y)
 			}
 
 			sort.Ints(allSqDistances)
@@ -51,22 +50,26 @@ func (b *NeighborhoodBuilder) Build(minutiae []*SearchMinutia) [][]*NeighborEdge
 		}
 		for neighbor := 0; neighbor < len(minutiae); neighbor++ {
 			nminutia := minutiae[neighbor]
-			if neighbor != reference && math.Pow(float64(rminutia.X-nminutia.X), 2)+math.Pow(float64(rminutia.Y-nminutia.Y), 2) <= float64(maxSqDistance) {
+			distanceSq := (rminutia.X-nminutia.X)*(rminutia.X-nminutia.X) + (rminutia.Y-nminutia.Y)*(rminutia.Y-nminutia.Y)
+			if neighbor != reference && distanceSq <= maxSqDistance {
 				star = append(star, NewNeighborEdge(minutiae, reference, neighbor))
 			}
 		}
 
 		sort.Slice(star, func(i, j int) bool {
-			return star[i].Length < star[j].Length || star[i].Neighbor < star[j].Neighbor
+			if star[i].Length == star[j].Length {
+				return star[i].Neighbor < star[j].Neighbor
+			}
+			return star[i].Length < star[j].Length
 		})
+
 		for len(star) > config.Config.EdgeTableNeighbors {
-			star[config.Config.EdgeTableNeighbors] = star[len(star)-1]
-			star[len(star)-1] = nil
 			star = star[:len(star)-1]
 		}
 
-		edges[reference] = append(edges[reference], star...)
-		star = make([]*NeighborEdge, 0)
+		edges[reference] = make([]*NeighborEdge, len(star))
+		copy(edges[reference], star)
+		star = star[:0]
 	}
 	b.logger.Log("edge-table", edges)
 	return edges

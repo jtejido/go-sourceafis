@@ -1,7 +1,6 @@
 package features
 
 import (
-	"reflect"
 	"sourceafis/primitives"
 )
 
@@ -41,26 +40,21 @@ func (s *Skeleton) AddMinutia(minutia *SkeletonMinutia) {
 	s.Minutiae = append(s.Minutiae, minutia)
 }
 func (s *Skeleton) RemoveMinutia(minutia *SkeletonMinutia) {
-	for i := 0; i < len(s.Minutiae); i++ {
-		if reflect.DeepEqual(s.Minutiae[i], minutia) {
-			s.Minutiae = removeMinutia(s.Minutiae, i)
+	for i, m := range s.Minutiae {
+		if m == minutia {
+			s.Minutiae = append(s.Minutiae[:i], s.Minutiae[i+1:]...)
+			break
 		}
 	}
-}
-
-func removeMinutia(s []*SkeletonMinutia, i int) []*SkeletonMinutia {
-	s[i] = s[len(s)-1]
-	return s[:len(s)-1]
 }
 
 func (s *Skeleton) Shadow() (*primitives.BooleanMatrix, error) {
 	shadow := primitives.NewBooleanMatrixFromPoint(s.Size)
 	for _, minutia := range s.Minutiae {
-
 		shadow.SetPoint(minutia.Position, true)
 
 		for _, ridge := range minutia.Ridges {
-			if ridge.StartMinutia().Position.Y <= ridge.EndMinutia().Position.Y {
+			if ridge.Start().Position.Y <= ridge.End().Position.Y {
 				it := ridge.Points.Iterator()
 				for it.HasNext() {
 					point, err := it.Next()

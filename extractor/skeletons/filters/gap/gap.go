@@ -69,14 +69,13 @@ func (f *SkeletonGapFilter) Apply(skeleton *features.Skeleton) error {
 	heap.Init(&queue)
 
 	for _, end1 := range skeleton.Minutiae {
-
 		if len(end1.Ridges) == 1 && end1.Ridges[0].Points.Size() >= config.Config.ShortestJoinedEnding {
 			for _, end2 := range skeleton.Minutiae {
 				withinGapLimits, err := isWithinGapLimits(end1, end2)
 				if err != nil {
 					return err
 				}
-				if end2 != end1 && len(end2.Ridges) == 1 && end1.Ridges[0].EndMinutia() != end2 && end2.Ridges[0].Points.Size() >= config.Config.ShortestJoinedEnding && withinGapLimits {
+				if end2 != end1 && len(end2.Ridges) == 1 && end1.Ridges[0].End() != end2 && end2.Ridges[0].Points.Size() >= config.Config.ShortestJoinedEnding && withinGapLimits {
 					gap := new(SkeletonGap)
 					gap.distance = end1.Position.Minus(end2.Position).LengthSq()
 					gap.end1 = end1
@@ -104,7 +103,6 @@ func (f *SkeletonGapFilter) Apply(skeleton *features.Skeleton) error {
 	if err := knot.Apply(skeleton); err != nil {
 		return err
 	}
-
 	f.logger.LogSkeleton("removed-gaps", skeleton)
 	return nil
 }
@@ -114,8 +112,8 @@ func addGapRidge(shadow *primitives.BooleanMatrix, gap *SkeletonGap, line []prim
 	for _, point := range line {
 		ridge.Points.Add(point)
 	}
-	ridge.Start(gap.end1)
-	ridge.End(gap.end2)
+	ridge.SetStart(gap.end1)
+	ridge.SetEnd(gap.end2)
 	for _, point := range line {
 		shadow.SetPoint(point, true)
 	}
@@ -164,5 +162,5 @@ func angleSampleForGapRemoval(minutia *features.SkeletonMinutia) (primitives.Int
 		return ridge.Points.Get(config.Config.GapAngleOffset)
 	}
 
-	return ridge.EndMinutia().Position, nil
+	return ridge.End().Position, nil
 }

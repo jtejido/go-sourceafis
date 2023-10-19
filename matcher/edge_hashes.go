@@ -37,11 +37,11 @@ func coverage(edge *features.IndexedEdge) []int {
 	minLengthBin := (edge.Length - config.Config.MaxDistanceError) / config.Config.MaxDistanceError
 	maxLengthBin := (edge.Length + config.Config.MaxDistanceError) / config.Config.MaxDistanceError
 	angleBins := int(math.Ceil(2 * primitives.Pi / config.Config.MaxAngleError))
-	minReferenceBin := int(float64(edge.ReferenceAngle.Difference(primitives.FloatAngle(config.Config.MaxAngleError))) / config.Config.MaxAngleError)
-	maxReferenceBin := int(float64(primitives.AngleAdd(float64(edge.ReferenceAngle), config.Config.MaxAngleError)) / config.Config.MaxAngleError)
+	minReferenceBin := int(math.Floor(float64(edge.ReferenceAngle.Difference(primitives.FloatAngle(config.Config.MaxAngleError))) / config.Config.MaxAngleError))
+	maxReferenceBin := int(math.Floor(float64(primitives.AngleAdd(float64(edge.ReferenceAngle), config.Config.MaxAngleError)) / config.Config.MaxAngleError))
 	endReferenceBin := (maxReferenceBin + 1) % angleBins
-	minNeighborBin := int(float64(edge.NeighborAngle.Difference(primitives.FloatAngle(config.Config.MaxAngleError))) / config.Config.MaxAngleError)
-	maxNeighborBin := int(float64(primitives.AngleAdd(float64(edge.NeighborAngle), config.Config.MaxAngleError)) / config.Config.MaxAngleError)
+	minNeighborBin := int(math.Floor(float64(edge.NeighborAngle.Difference(primitives.FloatAngle(config.Config.MaxAngleError))) / config.Config.MaxAngleError))
+	maxNeighborBin := int(math.Floor(float64(primitives.AngleAdd(float64(edge.NeighborAngle), config.Config.MaxAngleError)) / config.Config.MaxAngleError))
 	endNeighborBin := (maxNeighborBin + 1) % angleBins
 	coverage := make([]int, 0)
 	for lengthBin := minLengthBin; lengthBin <= maxLengthBin; lengthBin++ {

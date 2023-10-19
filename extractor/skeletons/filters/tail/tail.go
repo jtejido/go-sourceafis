@@ -20,7 +20,7 @@ func New(logger logger.TransparencyLogger) *SkeletonTailFilter {
 
 func (f *SkeletonTailFilter) Apply(skeleton *features.Skeleton) error {
 	for _, minutia := range skeleton.Minutiae {
-		if len(minutia.Ridges) == 1 && len(minutia.Ridges[0].EndMinutia().Ridges) >= 3 {
+		if len(minutia.Ridges) == 1 && len(minutia.Ridges[0].End().Ridges) >= 3 {
 			if minutia.Ridges[0].Points.Size() < config.Config.MinTailLength {
 				minutia.Ridges[0].Detach()
 			}

@@ -16,7 +16,7 @@ func (c *TransparencyContents) Accepts(key string) bool {
 }
 
 func (c *TransparencyContents) Accept(key, mime string, data []byte) error {
-	fmt.Printf("%d B  %s %s \n", len(data), mime, key)
+	// fmt.Printf("%d B  %s %s \n", len(data), mime, key)
 	return nil
 }
 
@@ -52,6 +52,14 @@ func main() {
 	}
 
 	matcher := sourceafis.NewMatcher(l, probe)
-	fmt.Println("matching score ===> ", matcher.Match(candidate))
-	fmt.Println("non-matching score ===> ", matcher.Match(candidate2))
+	ms, err := matcher.Match(candidate)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	nms, err := matcher.Match(candidate2)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	fmt.Println("matching score ===> ", ms)
+	fmt.Println("non-matching score ===> ", nms)
 }

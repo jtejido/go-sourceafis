@@ -50,44 +50,30 @@ func (t *BinaryThinning) Thin(input *primitives.BooleanMatrix, ty features.Skele
 							}
 							if partial.Get(x, y+1) {
 								neighbors |= 64
-							} else {
-								neighbors |= 0
 							}
 
 							if partial.Get(x-1, y+1) {
 								neighbors |= 32
-							} else {
-								neighbors |= 0
 							}
 
 							if partial.Get(x+1, y) {
 								neighbors |= 16
-							} else {
-								neighbors |= 0
 							}
 
 							if partial.Get(x-1, y) {
 								neighbors |= 8
-							} else {
-								neighbors |= 0
 							}
 
 							if partial.Get(x+1, y-1) {
 								neighbors |= 4
-							} else {
-								neighbors |= 0
 							}
 
 							if partial.Get(x, y-1) {
 								neighbors |= 2
-							} else {
-								neighbors |= 0
 							}
 
 							if partial.Get(x-1, y-1) {
 								neighbors |= 1
-							} else {
-								neighbors |= 0
 							}
 
 							if (neighborhoodTypes[neighbors] == REMOVABLE || neighborhoodTypes[neighbors] == ENDING && isFalseEnding(partial, primitives.IntPoint{X: x, Y: y})) {
@@ -116,7 +102,9 @@ func isFalseEnding(binary *primitives.BooleanMatrix, ending primitives.IntPoint)
 					count++
 				}
 			}
-			return count > 2
+			if count > 2 {
+				return true
+			}
 		}
 	}
 	return false

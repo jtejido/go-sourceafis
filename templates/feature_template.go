@@ -7,10 +7,10 @@ import (
 
 type FeatureTemplate struct {
 	Size     primitives.IntPoint
-	Minutiae []*features.FeatureMinutia
+	Minutiae *primitives.GenericList[*features.FeatureMinutia]
 }
 
-func NewFeatureTemplate(size primitives.IntPoint, minutiae []*features.FeatureMinutia) *FeatureTemplate {
+func NewFeatureTemplate(size primitives.IntPoint, minutiae *primitives.GenericList[*features.FeatureMinutia]) *FeatureTemplate {
 	return &FeatureTemplate{
 		Size:     size,
 		Minutiae: minutiae,

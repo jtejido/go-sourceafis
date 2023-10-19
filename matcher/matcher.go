@@ -1,6 +1,8 @@
 package matcher
 
 import (
+	"errors"
+	"fmt"
 	"sourceafis/templates"
 )
 
@@ -23,18 +25,29 @@ func NewMatcher(logger MatcherLogger) *Matcher {
 	}
 }
 
-func (m *Matcher) Match(probe *Probe, candidate *templates.SearchTemplate) float64 {
+func (m *Matcher) Match(probe *Probe, candidate *templates.SearchTemplate) (high float64, err error) {
 	thread := CurrentThread()
+	defer func() {
+		kill()
+		if r := recover(); r != nil {
+			var ok bool
+			err, ok = r.(error)
+			if !ok {
+				err = errors.New(fmt.Sprint(r))
+			}
+
+			return
+		}
+	}()
 	thread.Pairing.ReserveProbe(probe)
 	thread.Pairing.ReserveCandidate(candidate)
 	thread.Pairing.supportEnabled = true
 	Enumerate(probe, candidate, thread.Roots)
 	m.logger.LogRootPairs(thread.Roots.count, thread.Roots.pairs)
 
-	var high float64
 	best := -1
 	for i := 0; i < thread.Roots.count; i++ {
-		Crawl(probe.template.Edges, candidate.Edges, thread.Pairing, thread.Roots.pairs[i], thread.Queue)
+		Crawl(probe.template.Edges, candidate.Edges, thread.Pairing, thread.Roots.pairs[i], &thread.Queue)
 		m.logger.LogPairing(thread.Pairing)
 		Compute(probe.template, candidate, thread.Pairing, thread.Score)
 		m.logger.LogScore(thread.Score)
@@ -48,7 +61,7 @@ func (m *Matcher) Match(probe *Probe, candidate *templates.SearchTemplate) float
 
 	if best >= 0 {
 		thread.Pairing.supportEnabled = true
-		Crawl(probe.template.Edges, candidate.Edges, thread.Pairing, thread.Roots.pairs[best], thread.Queue)
+		Crawl(probe.template.Edges, candidate.Edges, thread.Pairing, thread.Roots.pairs[best], &thread.Queue)
 		m.logger.LogBestPairing(thread.Pairing)
 		Compute(probe.template, candidate, thread.Pairing, thread.Score)
 
@@ -58,5 +71,5 @@ func (m *Matcher) Match(probe *Probe, candidate *templates.SearchTemplate) float
 
 	thread.Roots.Discard()
 	m.logger.LogBestMatch(best)
-	return high
+	return
 }

@@ -1,6 +1,9 @@
 package primitives
 
+import "sync"
+
 type IntMatrix struct {
+	sync.RWMutex
 	Width, Height int
 	cells         []int
 }
@@ -18,6 +21,8 @@ func NewIntMatrixFromPoint(size IntPoint) *IntMatrix {
 }
 
 func (m *IntMatrix) Get(x, y int) int {
+	m.RLock()
+	defer m.RUnlock()
 	return m.cells[m.offset(x, y)]
 }
 
@@ -26,6 +31,8 @@ func (m *IntMatrix) GetPoint(at IntPoint) int {
 }
 
 func (m *IntMatrix) Set(x, y, value int) {
+	m.Lock()
+	defer m.Unlock()
 	m.cells[m.offset(x, y)] = value
 }
 

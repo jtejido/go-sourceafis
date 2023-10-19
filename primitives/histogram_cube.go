@@ -67,3 +67,13 @@ func (h *HistogramCube) SumPoint(at IntPoint) int {
 func (h *HistogramCube) offset(x, y, z int) int {
 	return (y*h.Width+x)*h.Bins + z
 }
+
+func (histogram *HistogramCube) Merge(other *HistogramCube) {
+	if histogram.Width != other.Width || histogram.Height != other.Height || histogram.Bins != other.Bins {
+		return
+	}
+
+	for i := 0; i < len(histogram.Counts); i++ {
+		histogram.Counts[i] += other.Counts[i]
+	}
+}

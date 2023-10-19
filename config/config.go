@@ -1,6 +1,8 @@
 package config
 
 import (
+	"runtime"
+
 	"github.com/BurntSushi/toml"
 	"github.com/mcuadros/go-defaults"
 )
@@ -79,6 +81,7 @@ import (
 // )
 
 type config struct {
+	Workers                       int     `default:"1"`
 	BlockSize                     int     `default:"15"`
 	HistogramDepth                int     `default:"256"`
 	ClippedContrast               float64 `default:"0.08"`
@@ -169,4 +172,5 @@ func LoadDefaultConfig() {
 	c := new(config)
 	defaults.SetDefaults(c)
 	Config = c
+	Config.Workers = runtime.NumCPU()
 }

@@ -30,7 +30,7 @@ func Apply(skeleton *features.Skeleton) error {
 					return err
 				}
 			}
-			extended.End(removed.EndMinutia())
+			extended.SetEnd(removed.End())
 			removed.Detach()
 		}
 	}

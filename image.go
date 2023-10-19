@@ -9,7 +9,8 @@ import (
 	"os"
 	"path"
 	"sourceafis/primitives"
-	"sourceafis/utils/encode/wsq"
+
+	"github.com/jtejido/go-wsq"
 )
 
 type ImageOptions func(*Image) (*Image, error)

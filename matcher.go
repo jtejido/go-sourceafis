@@ -18,6 +18,6 @@ func NewMatcher(logger matcher.MatcherLogger, probe *templates.SearchTemplate) *
 	}
 }
 
-func (m *Matcher) Match(candidate *templates.SearchTemplate) float64 {
+func (m *Matcher) Match(candidate *templates.SearchTemplate) (float64, error) {
 	return m.matcher.Match(m.probe, candidate)
 }

@@ -96,10 +96,10 @@ func (e *Extractor) Extract(raw *primitives.Matrix, dpi float64) (*templates.Fea
 	var template = templates.NewFeatureTemplate(raw.Size(), minutiae)
 
 	e.logger.Log("skeleton-minutiae", template)
-	template.Minutiae = inner.Apply(template.Minutiae, innerMask)
+	inner.Apply(template.Minutiae, innerMask)
 
 	e.logger.Log("inner-minutiae", template)
-	template.Minutiae = cloud.Apply(template.Minutiae)
+	cloud.Apply(template.Minutiae)
 	e.logger.Log("removed-minutia-clouds", template)
 
 	template = templates.NewFeatureTemplate(template.Size, top.Apply(template.Minutiae))

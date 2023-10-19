@@ -1,10 +1,12 @@
 package matcher
 
-import "container/heap"
-
-var (
-	current *MatcherThread
+import (
+	"container/heap"
+	"math/rand"
+	"sync"
 )
+
+var threads = sync.Map{}
 
 type PriorityQueue []*MinutiaPair
 
@@ -35,25 +37,35 @@ func (pq *PriorityQueue) Pop() any {
 type MatcherThread struct {
 	Roots   *RootList
 	Pairing *PairingGraph
-	Queue   *PriorityQueue
+	Queue   PriorityQueue
 	Score   *ScoringData
 }
 
-func NewMatcherThread(pool *MinutiaPairPool) *MatcherThread {
-	pq := make(PriorityQueue, 0)
-	heap.Init(&pq)
-	return &MatcherThread{
-		Roots:   NewRootList(pool),
-		Pairing: NewPairingGraph(pool),
-		Queue:   &pq,
-		Score:   new(ScoringData),
+func CurrentThread() *MatcherThread {
+	thread, ok := threads.Load(goroutineID())
+	if !ok {
+		thread = createAndStoreMatcherThread()
 	}
+	return thread.(*MatcherThread)
 }
 
-func CurrentThread() *MatcherThread {
-	if current == nil {
-		current = NewMatcherThread(NewMinutiaPairPool())
-	}
+func kill() {
+	threads.Delete(goroutineID())
+}
 
-	return current
+func goroutineID() int64 {
+	return rand.Int63()
+}
+
+func createAndStoreMatcherThread() *MatcherThread {
+	pool := NewMinutiaPairPool()
+	thread := &MatcherThread{
+		Roots:   NewRootList(pool),
+		Pairing: NewPairingGraph(pool),
+		Queue:   make(PriorityQueue, 0),
+		Score:   new(ScoringData),
+	}
+	heap.Init(&thread.Queue)
+	threads.Store(goroutineID(), thread)
+	return thread
 }

@@ -6,16 +6,19 @@ import (
 	"sourceafis/primitives"
 )
 
-func Apply(minutiae []*features.FeatureMinutia, mask *primitives.BooleanMatrix) []*features.FeatureMinutia {
-	filteredMinutiae := []*features.FeatureMinutia{}
+func Apply(minutiae *primitives.GenericList[*features.FeatureMinutia], mask *primitives.BooleanMatrix) {
+	for e := minutiae.Front(); e != nil; {
+		minutia := e.Value.(*features.FeatureMinutia)
 
-	for _, minutia := range minutiae {
 		arrow := primitives.FloatAngle(minutia.Direction).ToVector().Multiply(-config.Config.MaskDisplacement).Round()
 
-		if mask.GetPointWithFallback(minutia.Position.Plus(arrow), false) {
-			filteredMinutiae = append(filteredMinutiae, minutia)
+		if !mask.GetPointWithFallback(minutia.Position.Plus(arrow), false) {
+			next := e.Next()
+			minutiae.Remove(e)
+			e = next
+		} else {
+			e = e.Next()
 		}
 	}
 
-	return filteredMinutiae
 }

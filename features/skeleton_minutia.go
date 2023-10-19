@@ -1,7 +1,6 @@
 package features
 
 import (
-	"reflect"
 	"sourceafis/primitives"
 )
 
@@ -18,37 +17,34 @@ func NewSkeletonMinutia(position primitives.IntPoint) *SkeletonMinutia {
 }
 
 func (m *SkeletonMinutia) AttachStart(ridge *SkeletonRidge) {
-	for _, r := range m.Ridges {
-		if ridge == r {
-			return
-		}
+	if !m.containsRidge(ridge) {
+		m.Ridges = append(m.Ridges, ridge)
+		ridge.SetStart(m)
 	}
-
-	m.Ridges = append(m.Ridges, ridge)
-	ridge.Start(m)
 }
 func (m *SkeletonMinutia) DetachStart(ridge *SkeletonRidge) {
-	var contains bool
-	var index int
-	for i, r := range m.Ridges {
+	if m.containsRidge(ridge) {
+		m.removeRidge(ridge)
+		if ridge.Start() == m {
+			ridge.SetStart(nil)
+		}
+	}
+}
+
+func (minutia *SkeletonMinutia) containsRidge(ridge *SkeletonRidge) bool {
+	for _, r := range minutia.Ridges {
 		if r == ridge {
-			contains = true
-			index = i
+			return true
+		}
+	}
+	return false
+}
+
+func (minutia *SkeletonMinutia) removeRidge(ridge *SkeletonRidge) {
+	for i, r := range minutia.Ridges {
+		if r == ridge {
+			minutia.Ridges = append(minutia.Ridges[:i], minutia.Ridges[i+1:]...)
 			break
 		}
 	}
-
-	if contains {
-		//m.Ridges = remove(m.Ridges, index)
-		m.Ridges[index] = m.Ridges[len(m.Ridges)-1]
-		m.Ridges[len(m.Ridges)-1] = nil
-		m.Ridges = m.Ridges[:len(m.Ridges)-1]
-		if reflect.DeepEqual(ridge.StartMinutia(), m) {
-			ridge.Start(nil)
-		}
-	}
-}
-
-func remove(slice []*SkeletonRidge, s int) []*SkeletonRidge {
-	return append(slice[:s], slice[s+1:]...)
 }
