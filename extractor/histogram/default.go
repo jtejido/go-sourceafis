@@ -70,7 +70,6 @@ func (h *LocalHistograms) Smooth(blocks *primitives.BlockMap, input *primitives.
 	var wg sync.WaitGroup
 	numWorkers := config.Config.Workers
 	resultChan := make(chan *primitives.HistogramCube, numWorkers)
-	// Split the work into smaller tasks
 	blockIterator := blocks.Secondary.Blocks.Iterator()
 	tasks := make(chan primitives.IntPoint, numWorkers)
 	blocksAround := []primitives.IntPoint{
@@ -85,8 +84,6 @@ func (h *LocalHistograms) Smooth(blocks *primitives.BlockMap, input *primitives.
 		go func() {
 			defer wg.Done()
 			localOutput := primitives.NewHistogramCubeFromPoint(blocks.Secondary.Blocks, input.Bins)
-
-			// Process a subset of the corners
 			for corner := range tasks {
 				for _, relative := range blocksAround {
 					block := corner.Plus(relative)

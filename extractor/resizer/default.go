@@ -31,7 +31,6 @@ func resize(input *primitives.Matrix, newWidth, newHeight int) *primitives.Matri
 	}
 	close(rows)
 
-	// Define a function to process a section of the output image
 	processSection := func() {
 		defer wg.Done()
 		for y := range rows {
@@ -57,8 +56,7 @@ func resize(input *primitives.Matrix, newWidth, newHeight int) *primitives.Matri
 		}
 	}
 
-	// Define the number of goroutines to use for parallel processing
-	numGoroutines := config.Config.Workers // You can adjust this value based on the number of CPU cores
+	numGoroutines := config.Config.Workers
 
 	wg.Add(numGoroutines)
 	for i := 0; i < numGoroutines; i++ {

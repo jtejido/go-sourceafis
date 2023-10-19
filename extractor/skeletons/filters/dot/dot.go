@@ -5,14 +5,12 @@ import (
 )
 
 func Apply(skeleton *features.Skeleton) error {
-	removed := make([]*features.SkeletonMinutia, 0)
-	for _, minutia := range skeleton.Minutiae {
+
+	for i := 0; i < len(skeleton.Minutiae); i++ {
+		minutia := skeleton.Minutiae[i]
 		if len(minutia.Ridges) == 0 {
-			removed = append(removed, minutia)
+			skeleton.RemoveMinutia(minutia)
 		}
-	}
-	for _, minutia := range removed {
-		skeleton.RemoveMinutia(minutia)
 	}
 
 	return nil

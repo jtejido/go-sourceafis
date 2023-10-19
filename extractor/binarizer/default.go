@@ -77,7 +77,6 @@ func (b *BinarizedImage) Cleanup(binary, mask *primitives.BooleanMatrix) {
 		startY := i * sectionHeight
 		endY := startY + sectionHeight
 		if i == numWorkers-1 {
-			// Adjust the endY for the last section
 			endY = size.Y
 		}
 		wg.Add(1)

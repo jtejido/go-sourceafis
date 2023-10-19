@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sourceafis"
 	"sourceafis/config"
+	"time"
 
 	"log"
 )
@@ -16,11 +17,12 @@ func (c *TransparencyContents) Accepts(key string) bool {
 }
 
 func (c *TransparencyContents) Accept(key, mime string, data []byte) error {
-	// fmt.Printf("%d B  %s %s \n", len(data), mime, key)
+	fmt.Printf("%d B  %s %s \n", len(data), mime, key)
 	return nil
 }
 
 func main() {
+	now := time.Now()
 	config.LoadDefaultConfig()
 
 	probeImg, err := sourceafis.LoadImage("probe.png")
@@ -62,4 +64,5 @@ func main() {
 	}
 	fmt.Println("matching score ===> ", ms)
 	fmt.Println("non-matching score ===> ", nms)
+	fmt.Println("elapsed: ", time.Since(now))
 }

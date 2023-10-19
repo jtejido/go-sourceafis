@@ -1,11 +1,12 @@
 package tracer
 
 import (
-	"reflect"
 	"sort"
 	"sourceafis/extractor/logger"
 	"sourceafis/features"
 	"sourceafis/primitives"
+
+	"golang.org/x/exp/slices"
 )
 
 type SkeletonTracing struct {
@@ -60,7 +61,7 @@ func eq(a, b []primitives.IntPoint) bool {
 		return false
 	}
 
-	return reflect.DeepEqual(a, b)
+	return slices.Equal(a, b)
 }
 
 func linkNeighboringMinutiae(minutiae []primitives.IntPoint) map[primitives.IntPoint][]primitives.IntPoint {

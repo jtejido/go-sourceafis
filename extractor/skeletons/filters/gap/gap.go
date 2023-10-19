@@ -37,7 +37,6 @@ func (pq PriorityQueue) Less(i, j int) bool {
 
 func (pq PriorityQueue) Swap(i, j int) {
 	pq[i], pq[j] = pq[j], pq[i]
-
 }
 
 func (pq *PriorityQueue) Push(x any) {
