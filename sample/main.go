@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"sourceafis"
 	"sourceafis/config"
@@ -53,16 +54,12 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	matcher := sourceafis.NewMatcher(l, probe)
-	ms, err := matcher.Match(candidate)
+	matcher, err := sourceafis.NewMatcher(l, probe)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	nms, err := matcher.Match(candidate2)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-	fmt.Println("matching score ===> ", ms)
-	fmt.Println("non-matching score ===> ", nms)
+	ctx := context.Background()
+	fmt.Println("matching score ===> ", matcher.Match(ctx, candidate))
+	fmt.Println("non-matching score ===> ", matcher.Match(ctx, candidate2))
 	fmt.Println("elapsed: ", time.Since(now))
 }
