@@ -21,7 +21,7 @@ func (f *SkeletonFragmentFilter) Apply(skeleton *features.Skeleton) error {
 	for _, minutia := range skeleton.Minutiae {
 		if len(minutia.Ridges) == 1 {
 			ridge := minutia.Ridges[0]
-			if len(ridge.EndMinutia().Ridges) == 1 && ridge.Points.Size() < config.Config.MinFragmentLength {
+			if len(ridge.End().Ridges) == 1 && ridge.Points.Size() < config.Config.MinFragmentLength {
 				ridge.Detach()
 			}
 		}
@@ -31,6 +31,5 @@ func (f *SkeletonFragmentFilter) Apply(skeleton *features.Skeleton) error {
 		return err
 	}
 
-	f.logger.LogSkeleton("removed-fragments", skeleton)
-	return nil
+	return f.logger.LogSkeleton("removed-fragments", skeleton)
 }

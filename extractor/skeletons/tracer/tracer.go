@@ -1,11 +1,12 @@
 package tracer
 
 import (
-	"reflect"
 	"sort"
 	"sourceafis/extractor/logger"
 	"sourceafis/features"
 	"sourceafis/primitives"
+
+	"golang.org/x/exp/slices"
 )
 
 type SkeletonTracing struct {
@@ -31,8 +32,8 @@ func (tr *SkeletonTracing) Trace(thinned *primitives.BooleanMatrix, t features.S
 	if err != nil {
 		return nil, err
 	}
-	tr.logger.LogSkeleton("traced-skeleton", skeleton)
-	return skeleton, nil
+
+	return skeleton, tr.logger.LogSkeleton("traced-skeleton", skeleton)
 }
 
 func findMinutiae(thinned *primitives.BooleanMatrix) []primitives.IntPoint {
@@ -60,7 +61,7 @@ func eq(a, b []primitives.IntPoint) bool {
 		return false
 	}
 
-	return reflect.DeepEqual(a, b)
+	return slices.Equal(a, b)
 }
 
 func linkNeighboringMinutiae(minutiae []primitives.IntPoint) map[primitives.IntPoint][]primitives.IntPoint {
@@ -179,8 +180,8 @@ func traceRidges(thinned *primitives.BooleanMatrix, minutiaePoints map[primitive
 					ridge.Points.Add(current)
 				}
 				end := current
-				ridge.Start(minutiaePoints[minutiaPoint])
-				ridge.End(minutiaePoints[end])
+				ridge.SetStart(minutiaePoints[minutiaPoint])
+				ridge.SetEnd(minutiaePoints[end])
 				v, err := ridge.Points.Get(1)
 				if err != nil {
 					return err

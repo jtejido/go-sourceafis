@@ -36,7 +36,9 @@ func (m *SegmentationMask) Compute(blocks *primitives.BlockMap, histogram *primi
 	if err := mask.Merge(m.relative.Compute(contrast, blocks)); err != nil {
 		return nil, err
 	}
-	m.logger.Log("combined-mask", mask)
+	if err := m.logger.Log("combined-mask", mask); err != nil {
+		return nil, err
+	}
 	if err := mask.Merge(filter(mask)); err != nil {
 		return nil, err
 	}
@@ -54,11 +56,10 @@ func (m *SegmentationMask) Compute(blocks *primitives.BlockMap, histogram *primi
 		return nil, err
 	}
 
-	m.logger.Log("filtered-mask", mask)
-	return mask, nil
+	return mask, m.logger.Log("filtered-mask", mask)
 }
 
-func (m *SegmentationMask) Pixelwise(mask *primitives.BooleanMatrix, blocks *primitives.BlockMap) *primitives.BooleanMatrix {
+func (m *SegmentationMask) Pixelwise(mask *primitives.BooleanMatrix, blocks *primitives.BlockMap) (*primitives.BooleanMatrix, error) {
 	pixelized := primitives.NewBooleanMatrixFromPoint(blocks.Pixels)
 	it := blocks.Primary.Blocks.Iterator()
 	for it.HasNext() {
@@ -73,7 +74,7 @@ func (m *SegmentationMask) Pixelwise(mask *primitives.BooleanMatrix, blocks *pri
 		}
 	}
 
-	return pixelized
+	return pixelized, m.logger.Log("pixel-mask", pixelized)
 }
 
 func shrink(mask *primitives.BooleanMatrix, amount int) *primitives.BooleanMatrix {
@@ -87,7 +88,7 @@ func shrink(mask *primitives.BooleanMatrix, amount int) *primitives.BooleanMatri
 	return shrunk
 }
 
-func (m *SegmentationMask) Inner(outer *primitives.BooleanMatrix) *primitives.BooleanMatrix {
+func (m *SegmentationMask) Inner(outer *primitives.BooleanMatrix) (*primitives.BooleanMatrix, error) {
 	size := outer.Size()
 	inner := primitives.NewBooleanMatrixFromPoint(size)
 	for y := 1; y < size.Y-1; y++ {
@@ -107,6 +108,6 @@ func (m *SegmentationMask) Inner(outer *primitives.BooleanMatrix) *primitives.Bo
 	if total < config.Config.InnerMaskBorderDistance {
 		inner = shrink(inner, config.Config.InnerMaskBorderDistance-total)
 	}
-	m.logger.Log("inner-mask", inner)
-	return inner
+
+	return inner, m.logger.Log("inner-mask", inner)
 }

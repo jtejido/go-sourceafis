@@ -2,32 +2,31 @@ package minutiae
 
 import (
 	"sourceafis/features"
+	"sourceafis/primitives"
 )
 
-func Collect(ridges, valleys *features.Skeleton) ([]*features.FeatureMinutia, error) {
-	endingsM, err := collect(ridges, features.ENDING)
-	if err != nil {
+func Collect(ridges, valleys *features.Skeleton) (*primitives.GenericList[*features.FeatureMinutia], error) {
+	minutiae := primitives.NewGenericList[*features.FeatureMinutia]()
+	if err := collect(minutiae, ridges, features.ENDING); err != nil {
 		return nil, err
 	}
-	valleysM, err := collect(valleys, features.BIFURCATION)
-	if err != nil {
+	if err := collect(minutiae, valleys, features.BIFURCATION); err != nil {
 		return nil, err
 	}
 
-	return append(valleysM, endingsM...), nil
+	return minutiae, nil
 }
 
-func collect(skeleton *features.Skeleton, t features.MinutiaType) ([]*features.FeatureMinutia, error) {
-	minutiae := make([]*features.FeatureMinutia, 0)
+func collect(minutiae *primitives.GenericList[*features.FeatureMinutia], skeleton *features.Skeleton, t features.MinutiaType) error {
 	for _, minutia := range skeleton.Minutiae {
 		if len(minutia.Ridges) == 1 {
 			dir, err := minutia.Ridges[0].Direction()
 			if err != nil {
-				return nil, err
+				return err
 			}
-			minutiae = append(minutiae, features.NewFeatureMinutia(minutia.Position, dir, t))
+			minutiae.PushBack(features.NewFeatureMinutia(minutia.Position, dir, t))
 		}
 	}
 
-	return minutiae, nil
+	return nil
 }

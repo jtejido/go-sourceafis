@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"sourceafis"
 	"sourceafis/config"
+	"time"
 
 	"log"
 )
@@ -21,6 +23,7 @@ func (c *TransparencyContents) Accept(key, mime string, data []byte) error {
 }
 
 func main() {
+	now := time.Now()
 	config.LoadDefaultConfig()
 
 	probeImg, err := sourceafis.LoadImage("probe.png")
@@ -51,7 +54,12 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	matcher := sourceafis.NewMatcher(l, probe)
-	fmt.Println("matching score ===> ", matcher.Match(candidate))
-	fmt.Println("non-matching score ===> ", matcher.Match(candidate2))
+	matcher, err := sourceafis.NewMatcher(l, probe)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	ctx := context.Background()
+	fmt.Println("matching score ===> ", matcher.Match(ctx, candidate))
+	fmt.Println("non-matching score ===> ", matcher.Match(ctx, candidate2))
+	fmt.Println("elapsed: ", time.Since(now))
 }

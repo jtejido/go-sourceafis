@@ -57,7 +57,7 @@ func NewEdgeShape(reference, neighbor *SearchMinutia) *EdgeShape {
 	shift := 32 - bits.LeadingZeros32(uint32(x|y)>>POLAR_CACHE_BITS)
 
 	offset := (y>>shift)*POLAR_CACHE_RADIUS + (x >> shift)
-	e.Length = (POLAR_DISTANCE_CACHE[offset] << shift)
+	e.Length = POLAR_DISTANCE_CACHE[offset] << shift
 	angle := POLAR_ANGLE_CACHE[offset] + quadrant
 	e.ReferenceAngle = primitives.FloatAngle(reference.Direction).Difference(primitives.FloatAngle(angle))
 	e.NeighborAngle = primitives.FloatAngle(neighbor.Direction).Difference(primitives.FloatAngle(angle).Opposite())

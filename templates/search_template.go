@@ -17,10 +17,13 @@ func NewSearchTemplate(logger features.EdgeTableLogger, feat *FeatureTemplate) *
 	t := new(SearchTemplate)
 	t.Width = feat.Size.X
 	t.Height = feat.Size.Y
-	minutiae := make([]*features.SearchMinutia, len(feat.Minutiae))
+	minutiae := make([]*features.SearchMinutia, feat.Minutiae.Len())
 
-	for i, m := range feat.Minutiae {
-		minutiae[i] = features.NewSearchMinutia(m)
+	var i int
+	for temp := feat.Minutiae.Front(); temp != nil; temp = temp.Next() {
+		minutia := temp.Value.(*features.FeatureMinutia)
+		minutiae[i] = features.NewSearchMinutia(minutia)
+		i++
 	}
 
 	sort.Slice(minutiae, func(i, j int) bool {

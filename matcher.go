@@ -1,6 +1,7 @@
 package sourceafis
 
 import (
+	"context"
 	"sourceafis/matcher"
 	"sourceafis/templates"
 )
@@ -10,14 +11,18 @@ type Matcher struct {
 	matcher *matcher.Matcher
 }
 
-func NewMatcher(logger matcher.MatcherLogger, probe *templates.SearchTemplate) *Matcher {
+func NewMatcher(logger matcher.MatcherLogger, probe *templates.SearchTemplate) (*Matcher, error) {
 	hashBuilder := matcher.NewEdgeHashBuilder(logger.(matcher.HashTableLogger))
+	hash, err := hashBuilder.Build(probe)
+	if err != nil {
+		return nil, err
+	}
 	return &Matcher{
 		matcher: matcher.NewMatcher(logger),
-		probe:   matcher.NewProbe(probe, hashBuilder.Build(probe)),
-	}
+		probe:   matcher.NewProbe(probe, hash),
+	}, nil
 }
 
-func (m *Matcher) Match(candidate *templates.SearchTemplate) float64 {
-	return m.matcher.Match(m.probe, candidate)
+func (m *Matcher) Match(ctx context.Context, candidate *templates.SearchTemplate) float64 {
+	return m.matcher.Match(ctx, m.probe, candidate)
 }

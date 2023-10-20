@@ -1,6 +1,9 @@
 package primitives
 
+import "sync"
+
 type IntMatrix struct {
+	sync.RWMutex
 	Width, Height int
 	cells         []int
 }

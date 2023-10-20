@@ -24,11 +24,11 @@ func NewSkeletonRidgeFromReversed(reversed *SkeletonRidge) *SkeletonRidge {
 	return s
 }
 
-func (r *SkeletonRidge) StartMinutia() *SkeletonMinutia {
+func (r *SkeletonRidge) Start() *SkeletonMinutia {
 	return r.startMinutia
 }
 
-func (r *SkeletonRidge) Start(value *SkeletonMinutia) {
+func (r *SkeletonRidge) SetStart(value *SkeletonMinutia) {
 	if r.startMinutia != value {
 		if r.startMinutia != nil {
 			detachFrom := r.startMinutia
@@ -43,19 +43,19 @@ func (r *SkeletonRidge) Start(value *SkeletonMinutia) {
 	}
 }
 
-func (r *SkeletonRidge) EndMinutia() *SkeletonMinutia {
+func (r *SkeletonRidge) End() *SkeletonMinutia {
 	return r.endMinutia
 }
-func (r *SkeletonRidge) End(value *SkeletonMinutia) {
+func (r *SkeletonRidge) SetEnd(value *SkeletonMinutia) {
 	if r.endMinutia != value {
 		r.endMinutia = value
-		r.Reversed.Start(value)
+		r.Reversed.SetStart(value)
 	}
 }
 
 func (r *SkeletonRidge) Detach() {
-	r.Start(nil)
-	r.End(nil)
+	r.SetStart(nil)
+	r.SetEnd(nil)
 }
 
 func (r *SkeletonRidge) Direction() (float64, error) {

@@ -3,26 +3,39 @@ package cloud
 import (
 	"sourceafis/config"
 	"sourceafis/features"
+	"sourceafis/primitives"
 	"sourceafis/utils"
 )
 
-func Apply(minutiae []*features.FeatureMinutia) []*features.FeatureMinutia {
+func Apply(minutiae *primitives.GenericList[*features.FeatureMinutia]) {
 	radiusSq := utils.SquareInt(config.Config.MinutiaCloudRadius)
 
-	var kept []*features.FeatureMinutia
-	for _, minutia := range minutiae {
-		count := 0
-		for _, neighbor := range minutiae {
-			if neighbor != minutia && neighbor.Position.Minus(minutia.Position).LengthSq() <= radiusSq {
-				count++
-			}
-		}
+	// Create a map to count the number of neighbors within the radius for each minutia
+	neighborCount := make(map[*features.FeatureMinutia]int)
 
-		if config.Config.MaxCloudSize >= count-1 {
-			kept = append(kept, minutia)
+	for e := minutiae.Front(); e != nil; e = e.Next() {
+		minutia := e.Value.(*features.FeatureMinutia)
+		neighborCount[minutia] = 0
+
+		for e2 := minutiae.Front(); e2 != nil; e2 = e2.Next() {
+			neighbor := e2.Value.(*features.FeatureMinutia)
+			if neighbor != minutia {
+				if neighbor.Position.Minus(minutia.Position).LengthSq() <= radiusSq {
+					neighborCount[minutia]++
+				}
+			}
 		}
 	}
 
-	minutiae = append(minutiae, kept...)
-	return kept
+	// Remove minutiae that don't meet the criteria
+	for e := minutiae.Front(); e != nil; {
+		minutia := e.Value.(*features.FeatureMinutia)
+		if neighborCount[minutia] >= config.Config.MaxCloudSize {
+			next := e.Next()
+			minutiae.Remove(e)
+			e = next
+		} else {
+			e = e.Next()
+		}
+	}
 }

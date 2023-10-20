@@ -24,14 +24,14 @@ func (f *SkeletonPoreFilter) Apply(skeleton *features.Skeleton) error {
 				exitRidge := minutia.Ridges[exit]
 				arm1 := minutia.Ridges[(exit+1)%3]
 				arm2 := minutia.Ridges[(exit+2)%3]
-				if arm1.EndMinutia() == arm2.EndMinutia() && exitRidge.EndMinutia() != arm1.EndMinutia() && arm1.EndMinutia() != minutia && exitRidge.EndMinutia() != minutia {
-					end := arm1.EndMinutia()
+				if arm1.End() == arm2.End() && exitRidge.End() != arm1.End() && arm1.End() != minutia && exitRidge.End() != minutia {
+					end := arm1.End()
 					if len(end.Ridges) == 3 && arm1.Points.Size() <= config.Config.MaxPoreArm && arm2.Points.Size() <= config.Config.MaxPoreArm {
 						arm1.Detach()
 						arm2.Detach()
 						merged := features.NewSkeletonRidge()
-						merged.Start(minutia)
-						merged.End(end)
+						merged.SetStart(minutia)
+						merged.SetEnd(end)
 						for _, point := range minutia.Position.LineTo(end.Position) {
 							merged.Points.Add(point)
 						}
@@ -45,6 +45,6 @@ func (f *SkeletonPoreFilter) Apply(skeleton *features.Skeleton) error {
 	if err != nil {
 		return err
 	}
-	f.logger.LogSkeleton("removed-pores", skeleton)
-	return nil
+
+	return f.logger.LogSkeleton("removed-pores", skeleton)
 }

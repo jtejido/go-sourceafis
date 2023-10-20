@@ -1,10 +1,12 @@
 package matcher
 
-import "container/heap"
-
-var (
-	current *MatcherThread
+import (
+	"container/heap"
+	"context"
+	"sync"
 )
+
+var threads = sync.Map{}
 
 type PriorityQueue []*MinutiaPair
 
@@ -32,28 +34,31 @@ func (pq *PriorityQueue) Pop() any {
 	return item
 }
 
+type matcherThreadContextKey struct{}
+
 type MatcherThread struct {
 	Roots   *RootList
 	Pairing *PairingGraph
-	Queue   *PriorityQueue
+	Queue   PriorityQueue
 	Score   *ScoringData
 }
 
-func NewMatcherThread(pool *MinutiaPairPool) *MatcherThread {
-	pq := make(PriorityQueue, 0)
-	heap.Init(&pq)
-	return &MatcherThread{
-		Roots:   NewRootList(pool),
-		Pairing: NewPairingGraph(pool),
-		Queue:   &pq,
-		Score:   new(ScoringData),
+func CurrentThread(ctx context.Context) *MatcherThread {
+	if thread, ok := ctx.Value(matcherThreadContextKey{}).(*MatcherThread); ok {
+		return thread
 	}
+	return createAndStoreMatcherThread(ctx)
 }
 
-func CurrentThread() *MatcherThread {
-	if current == nil {
-		current = NewMatcherThread(NewMinutiaPairPool())
+func createAndStoreMatcherThread(ctx context.Context) *MatcherThread {
+	pool := NewMinutiaPairPool()
+	thread := &MatcherThread{
+		Roots:   NewRootList(pool),
+		Pairing: NewPairingGraph(pool),
+		Queue:   make(PriorityQueue, 0),
+		Score:   new(ScoringData),
 	}
-
-	return current
+	heap.Init(&thread.Queue)
+	ctx = context.WithValue(ctx, matcherThreadContextKey{}, thread)
+	return thread
 }

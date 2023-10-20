@@ -39,15 +39,6 @@ func (l *CircularList[V]) AddAt(index int, item V) error {
 	return nil
 }
 
-func (l *CircularList[V]) AddAll(collection []V) error {
-	for _, item := range collection {
-		if err := l.Add(item); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 func (l *CircularList[V]) Size() int {
 	return l.inner.size
 }

@@ -1,8 +1,12 @@
 package primitives
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
 type BooleanMatrix struct {
+	sync.RWMutex
 	Width, Height int
 	Cells         []bool
 }
@@ -26,6 +30,16 @@ func NewBooleanMatrixFromBooleanMatrix(other *BooleanMatrix) *BooleanMatrix {
 	}
 
 	return m
+}
+
+func (m *BooleanMatrix) BlockPoint(blockX, blockY, blockSize int) (int, int) {
+	if blockX < 0 || blockY < 0 || blockX*blockSize >= m.Width || blockY*blockSize >= m.Height {
+		// Handle out-of-bounds blocks or invalid input
+		return -1, -1
+	}
+	x := blockX * blockSize
+	y := blockY * blockSize
+	return x, y
 }
 
 func (m *BooleanMatrix) Get(x, y int) bool {

@@ -33,7 +33,9 @@ func (f *SkeletonFilters) Apply(skeleton *features.Skeleton) error {
 		return err
 	}
 
-	f.logger.LogSkeleton("removed-dots", skeleton)
+	if err := f.logger.LogSkeleton("removed-dots", skeleton); err != nil {
+		return err
+	}
 	if err := f.pore.Apply(skeleton); err != nil {
 		return err
 	}

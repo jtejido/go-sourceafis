@@ -45,39 +45,69 @@ func New(logger logger.TransparencyLogger) *Extractor {
 }
 
 func (e *Extractor) Extract(raw *primitives.Matrix, dpi float64) (*templates.FeatureTemplate, error) {
-	e.logger.Log("decoded-image", raw)
+	if err := e.logger.Log("decoded-image", raw); err != nil {
+		return nil, err
+	}
 	raw = resizer.Resize(raw, dpi)
-	e.logger.Log("scaled-image", raw)
+	if err := e.logger.Log("scaled-image", raw); err != nil {
+		return nil, err
+	}
 	blocks := primitives.NewBlockMap(raw.Width, raw.Height, config.Config.BlockSize)
-	e.logger.Log("blocks", blocks)
-	histogram := e.localHistogram.Create(blocks, raw)
+	if err := e.logger.Log("blocks", blocks); err != nil {
+		return nil, err
+	}
+	histogram, err := e.localHistogram.Create(blocks, raw)
+	if err != nil {
+		return nil, err
+	}
 
-	smoothHistogram := e.localHistogram.Smooth(blocks, histogram)
-
+	smoothHistogram, err := e.localHistogram.Smooth(blocks, histogram)
+	if err != nil {
+		return nil, err
+	}
 	mask, err := e.segmentationMask.Compute(blocks, histogram)
 	if err != nil {
 		return nil, err
 	}
 
-	equalized := e.equalizer.Equalize(blocks, raw, smoothHistogram, mask)
+	equalized, err := e.equalizer.Equalize(blocks, raw, smoothHistogram, mask)
+	if err != nil {
+		return nil, err
+	}
+	orientation, err := e.orientations.Compute(equalized, mask, blocks)
+	if err != nil {
+		return nil, err
+	}
+	smoothed, err := e.smoothing.Parallel(equalized, orientation, mask, blocks)
+	if err != nil {
+		return nil, err
+	}
+	orthogonal, err := e.smoothing.Orthogonal(smoothed, orientation, mask, blocks)
+	if err != nil {
+		return nil, err
+	}
+	binary, err := e.binarizer.Binarize(smoothed, orthogonal, mask, blocks)
+	if err != nil {
+		return nil, err
+	}
 
-	orientation := e.orientations.Compute(equalized, mask, blocks)
+	pixelMask, err := e.segmentationMask.Pixelwise(mask, blocks)
+	if err != nil {
+		return nil, err
+	}
+	if err := e.binarizer.Cleanup(binary, pixelMask); err != nil {
+		return nil, err
+	}
 
-	smoothed := e.smoothing.Parallel(equalized, orientation, mask, blocks)
-
-	orthogonal := e.smoothing.Orthogonal(smoothed, orientation, mask, blocks)
-
-	binary := e.binarizer.Binarize(smoothed, orthogonal, mask, blocks)
-
-	pixelMask := e.segmentationMask.Pixelwise(mask, blocks)
-
-	e.binarizer.Cleanup(binary, pixelMask)
-
-	e.logger.Log("pixel-mask", pixelMask)
+	if err := e.logger.Log("pixel-mask", pixelMask); err != nil {
+		return nil, err
+	}
 	inverted := e.binarizer.Invert(binary, pixelMask)
 
-	innerMask := e.segmentationMask.Inner(pixelMask)
-
+	innerMask, err := e.segmentationMask.Inner(pixelMask)
+	if err != nil {
+		return nil, err
+	}
 	ridges, err := e.skeletons.Create(binary, features.RIDGES)
 	if err != nil {
 		return nil, err
@@ -95,14 +125,22 @@ func (e *Extractor) Extract(raw *primitives.Matrix, dpi float64) (*templates.Fea
 
 	var template = templates.NewFeatureTemplate(raw.Size(), minutiae)
 
-	e.logger.Log("skeleton-minutiae", template)
-	template.Minutiae = inner.Apply(template.Minutiae, innerMask)
+	if err := e.logger.Log("skeleton-minutiae", template); err != nil {
+		return nil, err
+	}
+	inner.Apply(template.Minutiae, innerMask)
 
-	e.logger.Log("inner-minutiae", template)
-	template.Minutiae = cloud.Apply(template.Minutiae)
-	e.logger.Log("removed-minutia-clouds", template)
+	if err := e.logger.Log("inner-minutiae", template); err != nil {
+		return nil, err
+	}
+	cloud.Apply(template.Minutiae)
+	if err := e.logger.Log("removed-minutia-clouds", template); err != nil {
+		return nil, err
+	}
 
 	template = templates.NewFeatureTemplate(template.Size, top.Apply(template.Minutiae))
-	e.logger.Log("top-minutia", template)
+	if err := e.logger.Log("top-minutia", template); err != nil {
+		return nil, err
+	}
 	return template, nil
 }

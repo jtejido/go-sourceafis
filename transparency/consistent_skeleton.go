@@ -26,8 +26,8 @@ func NewConsistentSkeleton(skeleton *features.Skeleton) *ConsistentSkeleton {
 		for _, r := range minutia.Ridges {
 			if _, ok := r.Points.(*primitives.CircularList[primitives.IntPoint]); ok {
 				ridge := &ConsistentSkeletonRidge{
-					Start:  offsets[r.StartMinutia()],
-					End:    offsets[r.EndMinutia()],
+					Start:  offsets[r.Start()],
+					End:    offsets[r.End()],
 					Points: r.Points,
 				}
 				ridges = append(ridges, ridge)
