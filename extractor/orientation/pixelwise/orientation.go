@@ -2,10 +2,11 @@ package pixelwise
 
 import (
 	"math"
-	"sourceafis/config"
-	"sourceafis/extractor/logger"
-	"sourceafis/primitives"
-	"sourceafis/utils"
+
+	"github.com/jtejido/sourceafis/config"
+	"github.com/jtejido/sourceafis/extractor/logger"
+	"github.com/jtejido/sourceafis/primitives"
+	"github.com/jtejido/sourceafis/utils"
 )
 
 type ConsideredOrientation struct {

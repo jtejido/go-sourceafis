@@ -2,10 +2,11 @@ package thinner
 
 import (
 	"math/bits"
-	"sourceafis/config"
-	"sourceafis/extractor/logger"
-	"sourceafis/features"
-	"sourceafis/primitives"
+
+	"github.com/jtejido/sourceafis/config"
+	"github.com/jtejido/sourceafis/extractor/logger"
+	"github.com/jtejido/sourceafis/features"
+	"github.com/jtejido/sourceafis/primitives"
 )
 
 type NeighborhoodType int

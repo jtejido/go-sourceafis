@@ -2,8 +2,9 @@ package vote
 
 import (
 	"math"
-	"sourceafis/primitives"
-	"sourceafis/utils"
+
+	"github.com/jtejido/sourceafis/primitives"
+	"github.com/jtejido/sourceafis/utils"
 )
 
 func Apply(input, mask *primitives.BooleanMatrix, radius int, majority float64, borderDistance int) *primitives.BooleanMatrix {

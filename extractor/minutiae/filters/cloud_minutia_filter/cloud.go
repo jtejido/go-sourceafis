@@ -1,10 +1,10 @@
 package cloud
 
 import (
-	"sourceafis/config"
-	"sourceafis/features"
-	"sourceafis/primitives"
-	"sourceafis/utils"
+	"github.com/jtejido/sourceafis/config"
+	"github.com/jtejido/sourceafis/features"
+	"github.com/jtejido/sourceafis/primitives"
+	"github.com/jtejido/sourceafis/utils"
 )
 
 func Apply(minutiae *primitives.GenericList[*features.FeatureMinutia]) {

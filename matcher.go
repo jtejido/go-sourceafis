@@ -2,8 +2,9 @@ package sourceafis
 
 import (
 	"context"
-	"sourceafis/matcher"
-	"sourceafis/templates"
+
+	"github.com/jtejido/sourceafis/matcher"
+	"github.com/jtejido/sourceafis/templates"
 )
 
 type Matcher struct {

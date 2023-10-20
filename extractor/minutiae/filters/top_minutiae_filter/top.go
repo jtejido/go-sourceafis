@@ -2,9 +2,10 @@ package top
 
 import (
 	"sort"
-	"sourceafis/config"
-	"sourceafis/features"
-	"sourceafis/primitives"
+
+	"github.com/jtejido/sourceafis/config"
+	"github.com/jtejido/sourceafis/features"
+	"github.com/jtejido/sourceafis/primitives"
 )
 
 func Apply(minutiae *primitives.GenericList[*features.FeatureMinutia]) *primitives.GenericList[*features.FeatureMinutia] {

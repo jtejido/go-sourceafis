@@ -1,4 +1,4 @@
-module sourceafis
+module github.com/jtejido/sourceafis
 
 go 1.21.0
 

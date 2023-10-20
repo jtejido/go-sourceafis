@@ -2,7 +2,8 @@ package primitives
 
 import (
 	"math"
-	"sourceafis/utils"
+
+	"github.com/jtejido/sourceafis/utils"
 )
 
 type IntPoint struct {

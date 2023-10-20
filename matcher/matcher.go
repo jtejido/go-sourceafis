@@ -2,7 +2,8 @@ package matcher
 
 import (
 	"context"
-	"sourceafis/templates"
+
+	"github.com/jtejido/sourceafis/templates"
 )
 
 type MatcherLogger interface {

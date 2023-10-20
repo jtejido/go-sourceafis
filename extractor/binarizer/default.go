@@ -1,11 +1,12 @@
 package binarizer
 
 import (
-	"sourceafis/config"
-	"sourceafis/extractor/filter/vote"
-	"sourceafis/extractor/logger"
-	"sourceafis/primitives"
 	"sync"
+
+	"github.com/jtejido/sourceafis/config"
+	"github.com/jtejido/sourceafis/extractor/filter/vote"
+	"github.com/jtejido/sourceafis/extractor/logger"
+	"github.com/jtejido/sourceafis/primitives"
 )
 
 type BinarizedImage struct {

@@ -3,9 +3,10 @@ package sourceafis
 import (
 	"fmt"
 	"sort"
-	"sourceafis/features"
-	"sourceafis/matcher"
-	"sourceafis/transparency"
+
+	"github.com/jtejido/sourceafis/features"
+	"github.com/jtejido/sourceafis/matcher"
+	"github.com/jtejido/sourceafis/transparency"
 
 	"github.com/fxamacker/cbor/v2"
 )

@@ -2,7 +2,8 @@ package features
 
 import (
 	"sort"
-	"sourceafis/config"
+
+	"github.com/jtejido/sourceafis/config"
 )
 
 type NeighborEdge struct {

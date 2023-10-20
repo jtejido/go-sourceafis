@@ -1,8 +1,8 @@
 package transparency
 
 import (
-	"sourceafis/features"
-	"sourceafis/primitives"
+	"github.com/jtejido/sourceafis/features"
+	"github.com/jtejido/sourceafis/primitives"
 )
 
 type ConsistentSkeleton struct {

@@ -2,12 +2,13 @@ package gap
 
 import (
 	"container/heap"
-	"sourceafis/config"
-	"sourceafis/extractor/logger"
-	"sourceafis/extractor/skeletons/filters/knot"
-	"sourceafis/features"
-	"sourceafis/primitives"
-	"sourceafis/utils"
+
+	"github.com/jtejido/sourceafis/config"
+	"github.com/jtejido/sourceafis/extractor/logger"
+	"github.com/jtejido/sourceafis/extractor/skeletons/filters/knot"
+	"github.com/jtejido/sourceafis/features"
+	"github.com/jtejido/sourceafis/primitives"
+	"github.com/jtejido/sourceafis/utils"
 )
 
 type SkeletonGap struct {

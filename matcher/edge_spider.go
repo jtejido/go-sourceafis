@@ -2,8 +2,9 @@ package matcher
 
 import (
 	"container/heap"
-	"sourceafis/config"
-	"sourceafis/features"
+
+	"github.com/jtejido/sourceafis/config"
+	"github.com/jtejido/sourceafis/features"
 )
 
 func Crawl(pedges, cedges [][]*features.NeighborEdge, pairing *PairingGraph, root *MinutiaPair, queue *PriorityQueue) {

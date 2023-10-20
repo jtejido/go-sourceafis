@@ -1,8 +1,8 @@
 package templates
 
 import (
-	"sourceafis/features"
-	"sourceafis/primitives"
+	"github.com/jtejido/sourceafis/features"
+	"github.com/jtejido/sourceafis/primitives"
 )
 
 type FeatureTemplate struct {

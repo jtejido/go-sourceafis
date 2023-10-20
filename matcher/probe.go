@@ -1,8 +1,8 @@
 package matcher
 
 import (
-	"sourceafis/features"
-	"sourceafis/templates"
+	"github.com/jtejido/sourceafis/features"
+	"github.com/jtejido/sourceafis/templates"
 )
 
 type Probe struct {

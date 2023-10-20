@@ -1,8 +1,8 @@
 package knot
 
 import (
-	"sourceafis/extractor/skeletons/filters/dot"
-	"sourceafis/features"
+	"github.com/jtejido/sourceafis/extractor/skeletons/filters/dot"
+	"github.com/jtejido/sourceafis/features"
 )
 
 func Apply(skeleton *features.Skeleton) error {

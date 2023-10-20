@@ -2,7 +2,8 @@ package templates
 
 import (
 	"sort"
-	"sourceafis/features"
+
+	"github.com/jtejido/sourceafis/features"
 )
 
 const PRIME = 1610612741

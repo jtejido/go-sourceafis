@@ -8,7 +8,8 @@ import (
 	"image/png"
 	"os"
 	"path"
-	"sourceafis/primitives"
+
+	"github.com/jtejido/sourceafis/primitives"
 
 	"github.com/jtejido/go-wsq"
 )

@@ -1,9 +1,9 @@
 package absolute
 
 import (
-	"sourceafis/config"
-	"sourceafis/extractor/logger"
-	"sourceafis/primitives"
+	"github.com/jtejido/sourceafis/config"
+	"github.com/jtejido/sourceafis/extractor/logger"
+	"github.com/jtejido/sourceafis/primitives"
 )
 
 type AbsoluteContrastMask struct {
