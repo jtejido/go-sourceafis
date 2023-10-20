@@ -2,9 +2,10 @@ package matcher
 
 import (
 	"math"
-	"sourceafis/config"
-	"sourceafis/features"
-	"sourceafis/templates"
+
+	"github.com/jtejido/sourceafis/config"
+	"github.com/jtejido/sourceafis/features"
+	"github.com/jtejido/sourceafis/templates"
 )
 
 func Compute(probe, candidate *templates.SearchTemplate, pairing *PairingGraph, score *ScoringData) {

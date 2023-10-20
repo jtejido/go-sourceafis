@@ -2,9 +2,10 @@ package resizer
 
 import (
 	"math"
-	"sourceafis/config"
-	"sourceafis/primitives"
 	"sync"
+
+	"github.com/jtejido/sourceafis/config"
+	"github.com/jtejido/sourceafis/primitives"
 )
 
 func Resize(input *primitives.Matrix, dpi float64) *primitives.Matrix {

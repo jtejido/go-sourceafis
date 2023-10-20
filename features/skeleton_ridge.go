@@ -1,8 +1,8 @@
 package features
 
 import (
-	"sourceafis/config"
-	"sourceafis/primitives"
+	"github.com/jtejido/sourceafis/config"
+	"github.com/jtejido/sourceafis/primitives"
 )
 
 type SkeletonRidge struct {

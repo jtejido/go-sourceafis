@@ -1,9 +1,9 @@
 package matcher
 
 import (
-	"sourceafis/config"
-	"sourceafis/features"
-	"sourceafis/templates"
+	"github.com/jtejido/sourceafis/config"
+	"github.com/jtejido/sourceafis/features"
+	"github.com/jtejido/sourceafis/templates"
 )
 
 func Enumerate(probe *Probe, candidate *templates.SearchTemplate, roots *RootList) {

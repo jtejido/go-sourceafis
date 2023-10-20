@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"sourceafis/features"
+	"github.com/jtejido/sourceafis/features"
 )
 
 type TransparencyLogger interface {

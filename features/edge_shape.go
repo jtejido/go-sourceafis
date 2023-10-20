@@ -3,8 +3,9 @@ package features
 import (
 	"math"
 	"math/bits"
-	"sourceafis/primitives"
-	"sourceafis/utils"
+
+	"github.com/jtejido/sourceafis/primitives"
+	"github.com/jtejido/sourceafis/utils"
 )
 
 const (

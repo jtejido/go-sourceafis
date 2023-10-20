@@ -1,10 +1,10 @@
 package sourceafis
 
 import (
-	"sourceafis/extractor"
-	"sourceafis/extractor/logger"
-	"sourceafis/primitives"
-	"sourceafis/templates"
+	"github.com/jtejido/sourceafis/extractor"
+	"github.com/jtejido/sourceafis/extractor/logger"
+	"github.com/jtejido/sourceafis/primitives"
+	"github.com/jtejido/sourceafis/templates"
 )
 
 type Extractor interface {

@@ -1,6 +1,6 @@
 package features
 
-import "sourceafis/primitives"
+import "github.com/jtejido/sourceafis/primitives"
 
 type FeatureMinutia struct {
 	Position  primitives.IntPoint

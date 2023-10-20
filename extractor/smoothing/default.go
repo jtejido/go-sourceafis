@@ -1,10 +1,11 @@
 package smoothing
 
 import (
-	"sourceafis/config"
-	"sourceafis/extractor/logger"
-	"sourceafis/primitives"
 	"sync"
+
+	"github.com/jtejido/sourceafis/config"
+	"github.com/jtejido/sourceafis/extractor/logger"
+	"github.com/jtejido/sourceafis/primitives"
 )
 
 type OrientedSmoothing struct {

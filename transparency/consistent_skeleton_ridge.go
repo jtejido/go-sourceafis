@@ -1,6 +1,6 @@
 package transparency
 
-import "sourceafis/primitives"
+import "github.com/jtejido/sourceafis/primitives"
 
 type ConsistentSkeletonRidge struct {
 	Start, End int

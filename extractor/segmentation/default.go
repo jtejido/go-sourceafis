@@ -1,13 +1,13 @@
 package segmentation
 
 import (
-	"sourceafis/config"
-	"sourceafis/extractor/filter/vote"
-	"sourceafis/extractor/logger"
-	"sourceafis/extractor/mask/absolute"
-	"sourceafis/extractor/mask/clipped"
-	"sourceafis/extractor/mask/relative"
-	"sourceafis/primitives"
+	"github.com/jtejido/sourceafis/config"
+	"github.com/jtejido/sourceafis/extractor/filter/vote"
+	"github.com/jtejido/sourceafis/extractor/logger"
+	"github.com/jtejido/sourceafis/extractor/mask/absolute"
+	"github.com/jtejido/sourceafis/extractor/mask/clipped"
+	"github.com/jtejido/sourceafis/extractor/mask/relative"
+	"github.com/jtejido/sourceafis/primitives"
 )
 
 type SegmentationMask struct {

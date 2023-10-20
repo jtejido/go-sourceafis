@@ -1,10 +1,10 @@
 package orientation
 
 import (
-	"sourceafis/config"
-	"sourceafis/extractor/logger"
-	"sourceafis/extractor/orientation/pixelwise"
-	"sourceafis/primitives"
+	"github.com/jtejido/sourceafis/config"
+	"github.com/jtejido/sourceafis/extractor/logger"
+	"github.com/jtejido/sourceafis/extractor/orientation/pixelwise"
+	"github.com/jtejido/sourceafis/primitives"
 )
 
 type BlockOrientations struct {

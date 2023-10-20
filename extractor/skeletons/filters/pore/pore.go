@@ -1,10 +1,10 @@
 package pore
 
 import (
-	"sourceafis/config"
-	"sourceafis/extractor/logger"
-	"sourceafis/extractor/skeletons/filters/knot"
-	"sourceafis/features"
+	"github.com/jtejido/sourceafis/config"
+	"github.com/jtejido/sourceafis/extractor/logger"
+	"github.com/jtejido/sourceafis/extractor/skeletons/filters/knot"
+	"github.com/jtejido/sourceafis/features"
 )
 
 type SkeletonPoreFilter struct {

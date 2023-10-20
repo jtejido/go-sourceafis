@@ -3,9 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
-	"sourceafis"
-	"sourceafis/config"
 	"time"
+
+	"github.com/jtejido/sourceafis"
+	"github.com/jtejido/sourceafis/config"
 
 	"log"
 )
