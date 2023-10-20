@@ -3,7 +3,6 @@ package sourceafis
 import (
 	"fmt"
 	"image"
-	"image/color"
 	"image/jpeg"
 	"image/png"
 	"os"
@@ -113,14 +112,6 @@ func LoadImage(fname string, opts ...ImageOptions) (*Image, error) {
 	}
 	if err != nil {
 		return nil, fmt.Errorf("cannot decode image %s, err: %s", fname, err)
-	}
-
-	bounds := img.Bounds()
-	gray := image.NewGray(bounds)
-	for x := 0; x < bounds.Max.X; x++ {
-		for y := 0; y < bounds.Max.Y; y++ {
-			gray.Set(x, y, color.GrayModel.Convert(img.At(x, y)))
-		}
 	}
 
 	return NewFromImage(img, opts...)
