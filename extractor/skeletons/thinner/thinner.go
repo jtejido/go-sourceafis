@@ -26,7 +26,7 @@ func New(logger logger.TransparencyLogger) *BinaryThinning {
 	}
 }
 
-func (t *BinaryThinning) Thin(input *primitives.BooleanMatrix, ty features.SkeletonType) *primitives.BooleanMatrix {
+func (t *BinaryThinning) Thin(input *primitives.BooleanMatrix, ty features.SkeletonType) (*primitives.BooleanMatrix, error) {
 	neighborhoodTypes := neighborhoodTypes()
 	size := input.Size()
 	partial := primitives.NewBooleanMatrixFromPoint(size)
@@ -88,8 +88,8 @@ func (t *BinaryThinning) Thin(input *primitives.BooleanMatrix, ty features.Skele
 			}
 		}
 	}
-	t.logger.Log(ty.String()+"thinned-skeleton", thinned)
-	return thinned
+
+	return thinned, t.logger.Log(ty.String()+"thinned-skeleton", thinned)
 }
 
 func isFalseEnding(binary *primitives.BooleanMatrix, ending primitives.IntPoint) bool {

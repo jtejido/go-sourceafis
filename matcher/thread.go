@@ -2,7 +2,7 @@ package matcher
 
 import (
 	"container/heap"
-	"math/rand"
+	"context"
 	"sync"
 )
 
@@ -34,6 +34,8 @@ func (pq *PriorityQueue) Pop() any {
 	return item
 }
 
+type matcherThreadContextKey struct{}
+
 type MatcherThread struct {
 	Roots   *RootList
 	Pairing *PairingGraph
@@ -41,23 +43,14 @@ type MatcherThread struct {
 	Score   *ScoringData
 }
 
-func CurrentThread() *MatcherThread {
-	thread, ok := threads.Load(goroutineID())
-	if !ok {
-		thread = createAndStoreMatcherThread()
+func CurrentThread(ctx context.Context) *MatcherThread {
+	if thread, ok := ctx.Value(matcherThreadContextKey{}).(*MatcherThread); ok {
+		return thread
 	}
-	return thread.(*MatcherThread)
+	return createAndStoreMatcherThread(ctx)
 }
 
-func kill() {
-	threads.Delete(goroutineID())
-}
-
-func goroutineID() int64 {
-	return rand.Int63()
-}
-
-func createAndStoreMatcherThread() *MatcherThread {
+func createAndStoreMatcherThread(ctx context.Context) *MatcherThread {
 	pool := NewMinutiaPairPool()
 	thread := &MatcherThread{
 		Roots:   NewRootList(pool),
@@ -66,6 +59,6 @@ func createAndStoreMatcherThread() *MatcherThread {
 		Score:   new(ScoringData),
 	}
 	heap.Init(&thread.Queue)
-	threads.Store(goroutineID(), thread)
+	ctx = context.WithValue(ctx, matcherThreadContextKey{}, thread)
 	return thread
 }

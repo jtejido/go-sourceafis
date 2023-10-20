@@ -17,18 +17,16 @@ func New(logger logger.TransparencyLogger) *OrientedSmoothing {
 	}
 }
 
-func (s *OrientedSmoothing) Parallel(input, orientation *primitives.Matrix, mask *primitives.BooleanMatrix, blocks *primitives.BlockMap) *primitives.Matrix {
+func (s *OrientedSmoothing) Parallel(input, orientation *primitives.Matrix, mask *primitives.BooleanMatrix, blocks *primitives.BlockMap) (*primitives.Matrix, error) {
 	lines := lines(config.Config.ParallelSmoothingResolution, config.Config.ParallelSmoothingRadius, config.Config.ParallelSmoothingStep)
 	smoothed := smooth(input, orientation, mask, blocks, 0, lines)
-	s.logger.Log("parallel-smoothing", smoothed)
-	return smoothed
+	return smoothed, s.logger.Log("parallel-smoothing", smoothed)
 }
 
-func (s *OrientedSmoothing) Orthogonal(input, orientation *primitives.Matrix, mask *primitives.BooleanMatrix, blocks *primitives.BlockMap) *primitives.Matrix {
+func (s *OrientedSmoothing) Orthogonal(input, orientation *primitives.Matrix, mask *primitives.BooleanMatrix, blocks *primitives.BlockMap) (*primitives.Matrix, error) {
 	lines := lines(config.Config.OrthogonalSmoothingResolution, config.Config.OrthogonalSmoothingRadius, config.Config.OrthogonalSmoothingStep)
 	smoothed := smooth(input, orientation, mask, blocks, primitives.Pi, lines)
-	s.logger.Log("orthogonal-smoothing", smoothed)
-	return smoothed
+	return smoothed, s.logger.Log("orthogonal-smoothing", smoothed)
 }
 
 func lines(resolution, radius int, step float64) [][]primitives.IntPoint {

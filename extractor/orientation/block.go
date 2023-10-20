@@ -19,17 +19,23 @@ func New(logger logger.TransparencyLogger) *BlockOrientations {
 	}
 }
 
-func (o *BlockOrientations) Compute(image *primitives.Matrix, mask *primitives.BooleanMatrix, blocks *primitives.BlockMap) *primitives.Matrix {
+func (o *BlockOrientations) Compute(image *primitives.Matrix, mask *primitives.BooleanMatrix, blocks *primitives.BlockMap) (*primitives.Matrix, error) {
 	accumulated := o.pixelwise.Compute(image, mask, blocks)
 
-	byBlock := o.aggregate(accumulated, blocks, mask)
+	byBlock, err := o.aggregate(accumulated, blocks, mask)
+	if err != nil {
+		return nil, err
+	}
 
-	smooth := o.smooth(byBlock, mask)
+	smooth, err := o.smooth(byBlock, mask)
+	if err != nil {
+		return nil, err
+	}
 
-	return angles(smooth, mask)
+	return angles(smooth, mask), nil
 }
 
-func (o *BlockOrientations) aggregate(orientation *primitives.FloatPointMatrix, blocks *primitives.BlockMap, mask *primitives.BooleanMatrix) *primitives.FloatPointMatrix {
+func (o *BlockOrientations) aggregate(orientation *primitives.FloatPointMatrix, blocks *primitives.BlockMap, mask *primitives.BooleanMatrix) (*primitives.FloatPointMatrix, error) {
 	sums := primitives.NewFloatPointMatrixFromPoint(blocks.Primary.Blocks)
 	it := blocks.Primary.Blocks.Iterator()
 	for it.HasNext() {
@@ -43,11 +49,11 @@ func (o *BlockOrientations) aggregate(orientation *primitives.FloatPointMatrix, 
 			}
 		}
 	}
-	o.logger.Log("block-orientation", sums)
-	return sums
+
+	return sums, o.logger.Log("block-orientation", sums)
 }
 
-func (o *BlockOrientations) smooth(orientation *primitives.FloatPointMatrix, mask *primitives.BooleanMatrix) *primitives.FloatPointMatrix {
+func (o *BlockOrientations) smooth(orientation *primitives.FloatPointMatrix, mask *primitives.BooleanMatrix) (*primitives.FloatPointMatrix, error) {
 	size := mask.Size()
 	smoothed := primitives.NewFloatPointMatrixFromPoint(size)
 	it := size.Iterator()
@@ -64,8 +70,8 @@ func (o *BlockOrientations) smooth(orientation *primitives.FloatPointMatrix, mas
 			}
 		}
 	}
-	o.logger.Log("smoothed-orientation", smoothed)
-	return smoothed
+
+	return smoothed, o.logger.Log("smoothed-orientation", smoothed)
 }
 
 func angles(vectors *primitives.FloatPointMatrix, mask *primitives.BooleanMatrix) *primitives.Matrix {

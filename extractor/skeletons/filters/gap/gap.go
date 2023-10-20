@@ -102,8 +102,8 @@ func (f *SkeletonGapFilter) Apply(skeleton *features.Skeleton) error {
 	if err := knot.Apply(skeleton); err != nil {
 		return err
 	}
-	f.logger.LogSkeleton("removed-gaps", skeleton)
-	return nil
+
+	return f.logger.LogSkeleton("removed-gaps", skeleton)
 }
 
 func addGapRidge(shadow *primitives.BooleanMatrix, gap *SkeletonGap, line []primitives.IntPoint) {

@@ -34,6 +34,5 @@ func (f *SkeletonTailFilter) Apply(skeleton *features.Skeleton) error {
 		return err
 	}
 
-	f.logger.LogSkeleton("removed-tails", skeleton)
-	return nil
+	return f.logger.LogSkeleton("removed-tails", skeleton)
 }

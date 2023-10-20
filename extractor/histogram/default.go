@@ -17,7 +17,7 @@ func New(logger logger.TransparencyLogger) *LocalHistograms {
 	}
 }
 
-func (h *LocalHistograms) Create(blocks *primitives.BlockMap, image *primitives.Matrix) *primitives.HistogramCube {
+func (h *LocalHistograms) Create(blocks *primitives.BlockMap, image *primitives.Matrix) (*primitives.HistogramCube, error) {
 	var wg sync.WaitGroup
 	numWorkers := config.Config.Workers
 	resultChan := make(chan *primitives.HistogramCube, numWorkers)
@@ -62,11 +62,10 @@ func (h *LocalHistograms) Create(blocks *primitives.BlockMap, image *primitives.
 		mergedHistogram.Merge(partialHistogram)
 	}
 
-	h.logger.Log("histogram", mergedHistogram)
-	return mergedHistogram
+	return mergedHistogram, h.logger.Log("histogram", mergedHistogram)
 }
 
-func (h *LocalHistograms) Smooth(blocks *primitives.BlockMap, input *primitives.HistogramCube) *primitives.HistogramCube {
+func (h *LocalHistograms) Smooth(blocks *primitives.BlockMap, input *primitives.HistogramCube) (*primitives.HistogramCube, error) {
 	var wg sync.WaitGroup
 	numWorkers := config.Config.Workers
 	resultChan := make(chan *primitives.HistogramCube, numWorkers)
@@ -117,6 +116,6 @@ func (h *LocalHistograms) Smooth(blocks *primitives.BlockMap, input *primitives.
 		partialOutput := <-resultChan
 		finalOutput.Merge(partialOutput)
 	}
-	h.logger.Log("smoothed-histogram", finalOutput)
-	return finalOutput
+
+	return finalOutput, h.logger.Log("smoothed-histogram", finalOutput)
 }

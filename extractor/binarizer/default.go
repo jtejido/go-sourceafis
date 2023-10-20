@@ -18,7 +18,7 @@ func New(logger logger.TransparencyLogger) *BinarizedImage {
 	}
 }
 
-func (b *BinarizedImage) Binarize(input, baseline *primitives.Matrix, mask *primitives.BooleanMatrix, blocks *primitives.BlockMap) *primitives.BooleanMatrix {
+func (b *BinarizedImage) Binarize(input, baseline *primitives.Matrix, mask *primitives.BooleanMatrix, blocks *primitives.BlockMap) (*primitives.BooleanMatrix, error) {
 	binarized := primitives.NewBooleanMatrixFromPoint(input.Size())
 	var wg sync.WaitGroup
 	numWorkers := config.Config.Workers
@@ -50,11 +50,10 @@ func (b *BinarizedImage) Binarize(input, baseline *primitives.Matrix, mask *prim
 	}()
 
 	wg.Wait()
-	b.logger.Log("binarized-image", binarized)
-	return binarized
+	return binarized, b.logger.Log("binarized-image", binarized)
 }
 
-func (b *BinarizedImage) Cleanup(binary, mask *primitives.BooleanMatrix) {
+func (b *BinarizedImage) Cleanup(binary, mask *primitives.BooleanMatrix) error {
 
 	var wg sync.WaitGroup
 	numWorkers := config.Config.Workers
@@ -85,7 +84,7 @@ func (b *BinarizedImage) Cleanup(binary, mask *primitives.BooleanMatrix) {
 
 	wg.Wait()
 	removeCrosses(binary)
-	b.logger.Log("filtered-binary-image", binary)
+	return b.logger.Log("filtered-binary-image", binary)
 }
 
 func removeCrosses(input *primitives.BooleanMatrix) {

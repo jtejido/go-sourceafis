@@ -18,7 +18,7 @@ func New(logger logger.TransparencyLogger) *ImageEqualization {
 	}
 }
 
-func (e *ImageEqualization) Equalize(blocks *primitives.BlockMap, image *primitives.Matrix, histogram *primitives.HistogramCube, blockMask *primitives.BooleanMatrix) *primitives.Matrix {
+func (e *ImageEqualization) Equalize(blocks *primitives.BlockMap, image *primitives.Matrix, histogram *primitives.HistogramCube, blockMask *primitives.BooleanMatrix) (*primitives.Matrix, error) {
 	rangeMin := -1.
 	rangeMax := 1.
 	rangeSize := rangeMax - rangeMin
@@ -81,6 +81,6 @@ func (e *ImageEqualization) Equalize(blocks *primitives.BlockMap, image *primiti
 			}
 		}
 	}
-	e.logger.Log("equalized-image", result)
-	return result
+
+	return result, e.logger.Log("equalized-image", result)
 }

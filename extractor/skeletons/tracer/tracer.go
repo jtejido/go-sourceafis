@@ -32,8 +32,8 @@ func (tr *SkeletonTracing) Trace(thinned *primitives.BooleanMatrix, t features.S
 	if err != nil {
 		return nil, err
 	}
-	tr.logger.LogSkeleton("traced-skeleton", skeleton)
-	return skeleton, nil
+
+	return skeleton, tr.logger.LogSkeleton("traced-skeleton", skeleton)
 }
 
 func findMinutiae(thinned *primitives.BooleanMatrix) []primitives.IntPoint {

@@ -68,7 +68,7 @@ func NewEdgeHashBuilder(logger HashTableLogger) *EdgeHashBuilder {
 	}
 }
 
-func (b *EdgeHashBuilder) Build(template *templates.SearchTemplate) map[int][]*features.IndexedEdge {
+func (b *EdgeHashBuilder) Build(template *templates.SearchTemplate) (map[int][]*features.IndexedEdge, error) {
 	m := make(map[int][]*features.IndexedEdge)
 	for reference := 0; reference < len(template.Minutiae); reference++ {
 		for neighbor := 0; neighbor < len(template.Minutiae); neighbor++ {
@@ -83,6 +83,6 @@ func (b *EdgeHashBuilder) Build(template *templates.SearchTemplate) map[int][]*f
 			}
 		}
 	}
-	b.logger.LogEdgeHash(m)
-	return m
+
+	return m, b.logger.LogEdgeHash(m)
 }

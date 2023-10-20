@@ -1,8 +1,7 @@
 package matcher
 
 import (
-	"errors"
-	"fmt"
+	"context"
 	"sourceafis/templates"
 )
 
@@ -25,20 +24,10 @@ func NewMatcher(logger MatcherLogger) *Matcher {
 	}
 }
 
-func (m *Matcher) Match(probe *Probe, candidate *templates.SearchTemplate) (high float64, err error) {
-	thread := CurrentThread()
-	defer func() {
-		kill()
-		if r := recover(); r != nil {
-			var ok bool
-			err, ok = r.(error)
-			if !ok {
-				err = errors.New(fmt.Sprint(r))
-			}
+func (m *Matcher) Match(ctx context.Context, probe *Probe, candidate *templates.SearchTemplate) (high float64) {
+	thread := CurrentThread(ctx)
+	defer ctx.Done()
 
-			return
-		}
-	}()
 	thread.Pairing.ReserveProbe(probe)
 	thread.Pairing.ReserveCandidate(candidate)
 	thread.Pairing.supportEnabled = true

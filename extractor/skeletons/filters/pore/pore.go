@@ -45,6 +45,6 @@ func (f *SkeletonPoreFilter) Apply(skeleton *features.Skeleton) error {
 	if err != nil {
 		return err
 	}
-	f.logger.LogSkeleton("removed-pores", skeleton)
-	return nil
+
+	return f.logger.LogSkeleton("removed-pores", skeleton)
 }

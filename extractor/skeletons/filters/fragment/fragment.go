@@ -31,6 +31,5 @@ func (f *SkeletonFragmentFilter) Apply(skeleton *features.Skeleton) error {
 		return err
 	}
 
-	f.logger.LogSkeleton("removed-fragments", skeleton)
-	return nil
+	return f.logger.LogSkeleton("removed-fragments", skeleton)
 }
