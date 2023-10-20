@@ -1,5 +1,5 @@
 # go-sourceafis
-Golang port of SourceAFIS: A library for human fingerprint recognition
+An Unofficial Golang port of SourceAFIS: A library for human fingerprint recognition
 
 go-sourceafis is a pure Golang port of [SourceAFIS](https://sourceafis.machinezoo.com/),
 an algorithm for recognition of human fingerprints.
