@@ -74,18 +74,22 @@ func (e *Extractor) Extract(raw *primitives.Matrix, dpi float64) (*templates.Fea
 	if err != nil {
 		return nil, err
 	}
+
 	orientation, err := e.orientations.Compute(equalized, mask, blocks)
 	if err != nil {
 		return nil, err
 	}
+
 	smoothed, err := e.smoothing.Parallel(equalized, orientation, mask, blocks)
 	if err != nil {
 		return nil, err
 	}
+
 	orthogonal, err := e.smoothing.Orthogonal(smoothed, orientation, mask, blocks)
 	if err != nil {
 		return nil, err
 	}
+
 	binary, err := e.binarizer.Binarize(smoothed, orthogonal, mask, blocks)
 	if err != nil {
 		return nil, err
@@ -95,6 +99,7 @@ func (e *Extractor) Extract(raw *primitives.Matrix, dpi float64) (*templates.Fea
 	if err != nil {
 		return nil, err
 	}
+
 	if err := e.binarizer.Cleanup(binary, pixelMask); err != nil {
 		return nil, err
 	}
@@ -108,6 +113,7 @@ func (e *Extractor) Extract(raw *primitives.Matrix, dpi float64) (*templates.Fea
 	if err != nil {
 		return nil, err
 	}
+
 	ridges, err := e.skeletons.Create(binary, features.RIDGES)
 	if err != nil {
 		return nil, err

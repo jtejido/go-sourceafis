@@ -43,7 +43,9 @@ func (minutia *SkeletonMinutia) containsRidge(ridge *SkeletonRidge) bool {
 func (minutia *SkeletonMinutia) removeRidge(ridge *SkeletonRidge) {
 	for i, r := range minutia.Ridges {
 		if r == ridge {
-			minutia.Ridges = append(minutia.Ridges[:i], minutia.Ridges[i+1:]...)
+			minutia.Ridges[i] = minutia.Ridges[len(minutia.Ridges)-1]
+			minutia.Ridges[len(minutia.Ridges)-1] = nil
+			minutia.Ridges = minutia.Ridges[:len(minutia.Ridges)-1]
 			break
 		}
 	}

@@ -18,6 +18,7 @@ func New(logger logger.TransparencyLogger) *SkeletonPoreFilter {
 }
 
 func (f *SkeletonPoreFilter) Apply(skeleton *features.Skeleton) error {
+
 	for _, minutia := range skeleton.Minutiae {
 		if len(minutia.Ridges) == 3 {
 			for exit := 0; exit < 3; exit++ {
@@ -41,6 +42,7 @@ func (f *SkeletonPoreFilter) Apply(skeleton *features.Skeleton) error {
 			}
 		}
 	}
+
 	err := knot.Apply(skeleton)
 	if err != nil {
 		return err

@@ -6,6 +6,7 @@ import (
 )
 
 func Apply(skeleton *features.Skeleton) error {
+
 	for _, minutia := range skeleton.Minutiae {
 		if len(minutia.Ridges) == 2 && minutia.Ridges[0].Reversed != minutia.Ridges[1] {
 			extended := minutia.Ridges[0].Reversed

@@ -78,8 +78,8 @@ func (p IntPoint) CompareTo(other IntPoint) int {
 func (p IntPoint) LineTo(to IntPoint) []IntPoint {
 	var result []IntPoint
 	relative := to.Minus(p)
-	if math.Abs(float64(relative.X)) >= math.Abs(float64(relative.Y)) {
-		result = make([]IntPoint, int(math.Abs(float64(relative.X))+1))
+	if int(math.Abs(float64(relative.X))) >= int(math.Abs(float64(relative.Y))) {
+		result = make([]IntPoint, int(math.Abs(float64(relative.X)))+1)
 		if relative.X > 0 {
 			for i := 0; i <= relative.X; i++ {
 				v := float64(i) * (float64(relative.Y) / float64(relative.X))
@@ -94,7 +94,7 @@ func (p IntPoint) LineTo(to IntPoint) []IntPoint {
 			result[0] = p
 		}
 	} else {
-		result = make([]IntPoint, int(math.Abs(float64(relative.Y))+1))
+		result = make([]IntPoint, int(math.Abs(float64(relative.Y)))+1)
 		if relative.Y > 0 {
 			for i := 0; i <= relative.Y; i++ {
 				v := float64(i) * (float64(relative.X) / float64(relative.Y))
