@@ -12,6 +12,6 @@ require (
 )
 
 require (
-	github.com/spakin/netpbm v1.3.0 // indirect
+	github.com/spakin/netpbm v1.3.0
 	github.com/x448/float16 v0.8.4 // indirect
 )

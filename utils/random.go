@@ -8,8 +8,7 @@ const (
 )
 
 func discardHighOrderBits(value int64) int64 {
-	numLowBitsToKeep := 32
-	bitmask := (1 << numLowBitsToKeep) - 1
+	bitmask := (1 << 32) - 1
 	result := value & int64(bitmask)
 
 	return result
@@ -26,6 +25,6 @@ func NewOrientationRandom() *OrientationRandom {
 }
 
 func (or *OrientationRandom) Float64() float64 {
-	or.state *= int64(PRIME)
+	or.state *= PRIME
 	return (float64(or.state&MASK) + 0.5) * SCALING
 }
