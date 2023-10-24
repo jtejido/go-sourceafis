@@ -11,4 +11,7 @@ require (
 	golang.org/x/exp v0.0.0-20231006140011-7918f672742d
 )
 
-require github.com/x448/float16 v0.8.4 // indirect
+require (
+	github.com/spakin/netpbm v1.3.0 // indirect
+	github.com/x448/float16 v0.8.4 // indirect
+)
