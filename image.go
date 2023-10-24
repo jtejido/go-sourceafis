@@ -3,6 +3,7 @@ package sourceafis
 import (
 	"fmt"
 	"image"
+	"image/color"
 	"image/jpeg"
 	"image/png"
 	"os"
@@ -67,8 +68,8 @@ func NewFromImage(img image.Image, opts ...ImageOptions) (*Image, error) {
 	if err != nil {
 		return nil, err
 	}
-	for y := 0; y < bounds.Max.Y; y++ {
-		for x := 0; x < bounds.Max.X; x++ {
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
 			pix := rgbaToPixel(img.At(x, y).RGBA())
 			colorSum := pix.R + pix.G + pix.B
 			m.matrix.Set(x, y, 1-float64(colorSum)*(1.0/(3.0*255.0)))
@@ -85,7 +86,7 @@ func NewFromGray(img *image.Gray, opts ...ImageOptions) (*Image, error) {
 	}
 	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
 		for x := bounds.Min.X; x < bounds.Max.X; x++ {
-			m.matrix.Set(x, y, float64(img.GrayAt(x, y).Y))
+			m.matrix.Set(x, y, 1-float64(img.GrayAt(x, y).Y)/255)
 		}
 	}
 	return m, nil
@@ -115,6 +116,13 @@ func LoadImage(fname string, opts ...ImageOptions) (*Image, error) {
 	if err != nil {
 		return nil, fmt.Errorf("cannot decode image %s, err: %s", fname, err)
 	}
-
-	return NewFromImage(img, opts...)
+	bounds := img.Bounds()
+	gray := image.NewGray(bounds)
+	for x := 0; x < bounds.Max.X; x++ {
+		for y := 0; y < bounds.Max.Y; y++ {
+			c := img.At(x, y)
+			gray.Set(x, y, color.GrayModel.Convert(c))
+		}
+	}
+	return NewFromGray(gray, opts...)
 }
