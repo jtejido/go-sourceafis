@@ -20,7 +20,7 @@ func (c *TransparencyContents) Accepts(key string) bool {
 }
 
 func (c *TransparencyContents) Accept(key, mime string, data []byte) error {
-	fmt.Printf("%d B  %s %s \n", len(data), mime, key)
+	//fmt.Printf("%d B  %s %s \n", len(data), mime, key)
 	return nil
 }
 

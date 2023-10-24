@@ -29,10 +29,12 @@ func (g *SkeletonGraphs) Create(binary *primitives.BooleanMatrix, t features.Ske
 	if err := g.logger.Log(t.String()+"binarized-skeleton", binary); err != nil {
 		return nil, err
 	}
+
 	thinned, err := g.thinner.Thin(binary, t)
 	if err != nil {
 		return nil, err
 	}
+
 	skeleton, err := g.tracer.Trace(thinned, t)
 	if err != nil {
 		return nil, err

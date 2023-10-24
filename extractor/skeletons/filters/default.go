@@ -29,6 +29,7 @@ func New(logger logger.TransparencyLogger) *SkeletonFilters {
 }
 
 func (f *SkeletonFilters) Apply(skeleton *features.Skeleton) error {
+
 	if err := dot.Apply(skeleton); err != nil {
 		return err
 	}
@@ -36,6 +37,7 @@ func (f *SkeletonFilters) Apply(skeleton *features.Skeleton) error {
 	if err := f.logger.LogSkeleton("removed-dots", skeleton); err != nil {
 		return err
 	}
+
 	if err := f.pore.Apply(skeleton); err != nil {
 		return err
 	}

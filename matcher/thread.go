@@ -3,10 +3,7 @@ package matcher
 import (
 	"container/heap"
 	"context"
-	"sync"
 )
-
-var threads = sync.Map{}
 
 type PriorityQueue []*MinutiaPair
 
@@ -29,7 +26,7 @@ func (pq *PriorityQueue) Pop() any {
 	old := *pq
 	n := len(old)
 	item := old[n-1]
-	old[n-1] = nil // avoid memory leak
+	old[n-1] = nil
 	*pq = old[0 : n-1]
 	return item
 }

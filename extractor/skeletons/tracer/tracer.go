@@ -92,27 +92,22 @@ func linkNeighboringMinutiae(minutiae []primitives.IntPoint) map[primitives.IntP
 	return linking
 }
 
-type list []primitives.IntPoint
-
-func (e list) Len() int {
-	return len(e)
-}
-
-func (e list) Less(i, j int) bool {
-	return e[i].CompareTo(e[j]) < 0
-}
-
-func (e list) Swap(i, j int) {
-	e[i], e[j] = e[j], e[i]
-}
-
 func minutiaCenters(skeleton *features.Skeleton, linking map[primitives.IntPoint][]primitives.IntPoint) map[primitives.IntPoint]*features.SkeletonMinutia {
 	centers := make(map[primitives.IntPoint]*features.SkeletonMinutia)
 	keys := make([]primitives.IntPoint, 0, len(linking))
 	for k := range linking {
 		keys = append(keys, k)
 	}
-	sort.Sort(list(keys))
+	sort.Slice(keys, func(i, j int) bool {
+		if keys[i].X < keys[j].X {
+			return true
+		}
+		if keys[i].X == keys[j].X {
+			return keys[i].Y < keys[j].Y
+		}
+		return false
+	})
+
 	for _, currentPos := range keys {
 		linkedMinutiae := linking[currentPos]
 		primaryPos := linkedMinutiae[0]
@@ -158,11 +153,29 @@ func traceRidges(thinned *primitives.BooleanMatrix, minutiaePoints map[primitive
 	for k := range minutiaePoints {
 		keys = append(keys, k)
 	}
-	sort.Sort(list(keys))
+
+	sort.Slice(keys, func(i, j int) bool {
+		if keys[i].X < keys[j].X {
+			return true
+		}
+		if keys[i].X == keys[j].X {
+			return keys[i].Y < keys[j].Y
+		}
+		return false
+	})
+	contains := func(p primitives.IntPoint) bool {
+		_, ok := minutiaePoints[p]
+		return ok
+	}
+
+	isInLeads := func(p primitives.IntPoint) bool {
+		_, ok := leads[p]
+		return ok
+	}
 	for _, minutiaPoint := range keys {
 		for _, startRelative := range primitives.CORNER_NEIGHBORS {
 			start := minutiaPoint.Plus(startRelative)
-			if _, ok := minutiaePoints[start]; thinned.GetPointWithFallback(start, false) && !ok && leads[start] == nil {
+			if thinned.GetPointWithFallback(start, false) && !contains(start) && !isInLeads(start) {
 				ridge := features.NewSkeletonRidge()
 				ridge.Points.Add(minutiaPoint)
 				ridge.Points.Add(start)
