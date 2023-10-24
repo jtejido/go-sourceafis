@@ -8,9 +8,9 @@ import (
 	"os"
 	"path"
 
-	"github.com/jtejido/sourceafis/primitives"
-
 	"github.com/jtejido/go-wsq"
+	"github.com/jtejido/sourceafis/primitives"
+	"github.com/spakin/netpbm"
 )
 
 type ImageOptions func(*Image) (*Image, error)
@@ -103,6 +103,8 @@ func LoadImage(fname string, opts ...ImageOptions) (*Image, error) {
 	ext := path.Ext(fname)
 	if ext == ".wsq" {
 		img, err = wsq.Decode(f)
+	} else if ext == ".pgm" {
+		img, err = netpbm.Decode(f, &netpbm.DecodeOptions{Target: netpbm.PGM, Exact: true})
 	} else if ext == ".jpg" {
 		img, err = jpeg.Decode(f)
 	} else if ext == ".png" {

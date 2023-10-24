@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"runtime"
 	"time"
 
 	"github.com/jtejido/sourceafis"
@@ -26,7 +27,7 @@ func (c *TransparencyContents) Accept(key, mime string, data []byte) error {
 func main() {
 	now := time.Now()
 	config.LoadDefaultConfig()
-
+	config.Config.Workers = runtime.NumCPU()
 	probeImg, err := sourceafis.LoadImage("probe.png")
 	if err != nil {
 		log.Fatal(err.Error())

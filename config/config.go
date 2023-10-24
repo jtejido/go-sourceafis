@@ -1,8 +1,6 @@
 package config
 
 import (
-	"runtime"
-
 	"github.com/BurntSushi/toml"
 	"github.com/mcuadros/go-defaults"
 )
@@ -172,5 +170,4 @@ func LoadDefaultConfig() {
 	c := new(config)
 	defaults.SetDefaults(c)
 	Config = c
-	Config.Workers = runtime.NumCPU()
 }
