@@ -9,10 +9,6 @@ Similarity score is then compared to customizable match threshold.
 
 More on [homepage](https://sourceafis.machinezoo.com/net).
 
-## Status
-
-Unstable but maintained. Some APIs are prone to changes.
-
 ## Getting started
 
 See [homepage](https://sourceafis.machinezoo.com/net).
